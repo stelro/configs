@@ -8,14 +8,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'tpope/vim-fugitive'
-Plugin 'scrooloose/syntastic'
-Plugin 'bling/vim-airline'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'honza/vim-snippets'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'octol/vim-cpp-enhanced-highlight'
+
 call vundle#end()
 filetype plugin indent on
 
@@ -115,7 +108,3 @@ nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:ycm_global_ycm_conf = '~/.ycm_extra_conf.py'
 "Do not ask when starting vim
 let g:ycm_confirm_extra_conf = 0
-let g:ycm_warning_symbol = '~'
-nnoremap gt :tabnext<CR>
-nnoremap tg :tabprev<CR>
-let NERDTreeMapOpenInTab='<ENTER>'
