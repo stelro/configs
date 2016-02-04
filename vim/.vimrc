@@ -18,6 +18,12 @@ Plugin 'terryma/vim-multiple-cursors'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'zenorocha/dracula-theme',{'rtp':'vim/'}
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'tpope/vim-rails'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'pangloss/vim-javascript'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'tpope/vim-surround'
+
 call vundle#end()
 filetype plugin indent on
 
@@ -54,6 +60,8 @@ set history=1000
 "set to auto to read when a file is changed from the outside
 set autoread
 
+" set leader key to comma
+let mapleader = ","
 
 "open NERDTree on startup
 "autocmd vimenter * NERDTree
@@ -145,7 +153,7 @@ nnoremap tg :tabprev<CR>
 let NERDTreeMapOpenInTab='<SPACE>'
 
 "---------------------------------
-"Custom functions
+"Custom functions C/C++
 "---------------------------------
 
 "auto C/C++ header files guards
@@ -162,3 +170,59 @@ autocmd BufNewFile *.{h,hpp} call <SID>insert_gates()
 
 "let g:syntastic_cpp_compiler = 'clang++'
 "let g:syntastic_cpp_compiler_options = 'std=c++11 -stdlib-libc++'
+
+"---------------------------------
+"Custom functions Ruby on Rails
+"---------------------------------
+
+function! RunTests(filename)
+  " Write the file and run tests for the given filename
+  :w
+  :silent !clear
+  if match(a:filename, '\.feature$') != -1
+    exec ":!bundle exec cucumber " . a:filename
+  elseif match(a:filename, '_test\.rb$') != -1
+    if filereadable("script/testrb")
+      exec ":!script/testrb " . a:filename
+    else
+      exec ":!ruby -Itest " . a:filename
+    end
+  else
+    if filereadable("Gemfile")
+      exec ":!bundle exec rspec --color " . a:filename
+    else
+      exec ":!rspec --color " . a:filename
+    end
+  end
+endfunction
+
+function! SetTestFile()
+  " set the spec file that tests will be run for.
+  let t:grb_test_file=@%
+endfunction
+
+function! RunTestFile(...)
+  if a:0
+    let command_suffix = a:1
+  else
+    let command_suffix = ""
+  endif
+
+  " run the tests for the previously-marked file.
+  let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\)$') != -1
+  if in_test_file
+    call SetTestFile()
+  elseif !exists("t:grb_test_file")
+    return
+  end
+  call RunTests(t:grb_test_file . command_suffix)
+endfunction
+
+function! RunNearestTest()
+  let spec_line_number = line('.')
+  call RunTestFile(":" . spec_line_number . " -b")
+endfunction
+
+" run test runner
+map <leader>t :call RunTestFile()<cr>
+map <leader>T :call RunNearestTest()<cr>
