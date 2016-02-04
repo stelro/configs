@@ -9,41 +9,44 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'tpope/vim-fugitive'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/syntastic'
 Plugin 'bling/vim-airline'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'Valloric/YouCompleteMe'
 Plugin 'honza/vim-snippets'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'zenorocha/dracula-theme',{'rtp':'vim/'}
+Plugin 'vim-airline/vim-airline-themes'
 call vundle#end()
 filetype plugin indent on
 
 """"""""""""""""""""""""""""""
 " generic , all buffer stuff "
 """"""""""""""""""""""""""""""
-
-set number
-set ruler
+set mouse=a				"allow mouse in the buffer
+set number				"show line numbers 
+set ruler				"show row and column in footer
 set noeol
 set binary
-set nowrap
 set showcmd
-set showmatch
-set visualbell
-set laststatus=2
+set tw=80				"text warp 
+set showmatch			"show bracket matches
+set visualbell			"enable visal bell (disable audio bell)
+set laststatus=2		
 set autoread
-set ts=4
+set ts=4				"set indent on 4 spaces
 set sw=4
 set et
 set numberwidth=3
 set textwidth=0
-set autoindent
-set cindent
+set autoindent			"set auto ident
+set cindent				"set C ident
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set noexpandtab
+
 set laststatus=2
 "sets how many lines of history VIM has to remember
 set history=1000
@@ -51,27 +54,16 @@ set history=1000
 "set to auto to read when a file is changed from the outside
 set autoread
 
-syntax enable
-"syntax on
+
 "open NERDTree on startup
 "autocmd vimenter * NERDTree
-
 "NERDTree key mapping
 map <C-z> :NERDTreeToggle<CR>
 
-"syntastic settings
-"set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
-
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
 
 "smarter tab line
 let g:airline#extensions#tabline#enabled = 1
-
+let g:airline_theme='powerlineish'
 "Highlightin for class scope
 let g:cpp_class_scope_highlight = 1
 
@@ -79,17 +71,47 @@ let g:cpp_class_scope_highlight = 1
 let g:cpp_experimental_template_highlight = 1
 
 
-"colorscheme molokai
-"colorscheme ansi_blows
-"set background=dark
-colorscheme jellybeans
-let g:jellybeans_use_lowcolor_black = 0
-let g:jellybeans_overrides = {
-\    'Todo': { 'guifg': '303030', 'guibg': 'f0f000',
-\              'ctermfg': 'Black', 'ctermbg': 'Yellow',
-\              'attr': 'bold' },
-\}
-"set font for GUI
+" put git status, column/row number, total lines, and percentage in status
+set statusline=%F%m%r%h%w\ %{fugitive#statusline()}\ [%l,%c]\ [%L,%p%%]
+
+syntax on
+:set  t_Co=256
+
+"set dark background and color scheme
+
+colorscheme base16-railscasts
+highlight Normal ctermbg=235 
+
+" set up some custom colors
+highlight clear SignColumn
+highlight VertSplit    ctermbg=236
+highlight ColorColumn  ctermbg=237
+highlight LineNr       ctermbg=236 ctermfg=240
+highlight CursorLineNr ctermbg=236 ctermfg=240
+highlight CursorLine   ctermbg=236
+highlight StatusLineNC ctermbg=238 ctermfg=0
+highlight StatusLine   ctermbg=240 ctermfg=12
+highlight IncSearch    ctermbg=3   ctermfg=1
+highlight Search       ctermbg=1   ctermfg=3
+highlight Visual       ctermbg=3   ctermfg=0
+highlight Pmenu        ctermbg=240 ctermfg=12
+highlight PmenuSel     ctermbg=3   ctermfg=1
+highlight SpellBad     ctermbg=0   ctermfg=1
+
+" highlight the status bar when in insert mode
+if version >= 700
+  au InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
+  au InsertLeave * hi StatusLine ctermbg=240 ctermfg=12
+endif
+
+" highlight trailing spaces in annoying red
+highlight ExtraWhitespace ctermbg=1 guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
+
 set guifont=Menlo\ 12
 
 "colorscheme solorized
@@ -109,13 +131,34 @@ augroup END
 
 "Multiple cursors mapping
 let g:multi_cursor_next_key='<C-d>'
+let g:multi_cursor_quit_key='<Esc>'
 
 "YCM global file
 nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
-let g:ycm_global_ycm_conf = '~/.ycm_extra_conf.py'
+"let g:ycm_global_ycm_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 "Do not ask when starting vim
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_warning_symbol = '~'
 nnoremap gt :tabnext<CR>
 nnoremap tg :tabprev<CR>
-let NERDTreeMapOpenInTab='<ENTER>'
+let NERDTreeMapOpenInTab='<SPACE>'
+
+"---------------------------------
+"Custom functions
+"---------------------------------
+
+"auto C/C++ header files guards
+function! s:insert_gates()
+  let gatename = substitute(toupper(expand("%:t")), "\\.", "_", "g")
+  execute "normal! i#ifndef " . gatename
+  execute "normal! o#define " . gatename . " "
+  execute "normal! Go#endif /* " . gatename . " */"
+  normal! kk
+endfunction
+autocmd BufNewFile *.{h,hpp} call <SID>insert_gates()
+
+
+
+"let g:syntastic_cpp_compiler = 'clang++'
+"let g:syntastic_cpp_compiler_options = 'std=c++11 -stdlib-libc++'
