@@ -59,5 +59,7 @@ Vim auto-generate C/C++ header file Guards
 #endif //SOMEFILE_H
 ```
 
+
+
 **Colors used by terminal**
-![Colorpallete](http://s16.postimg.org/ervnn4hp1/collorpalete.png)
+![Colorpallete](http://s10.postimg.org/bknlpcwrt/pallete.png)
