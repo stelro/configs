@@ -1,0 +1,42 @@
+#!/bin/sh
+
+set -e
+
+echo "      _       _         __ _ _"
+echo "   __| | ___ | |_      / _(_) | ___  ___"
+echo "  / _\` |/ _ \| __|____| |_| | |/ _ \/ __|"
+echo " | (_| | (_) | ||_____|  _| | |  __/\__ \\"
+echo "  \__,_|\___/ \__|    |_| |_|_|\___||___/"
+echo ""
+
+echo "--- Updating dot-file's for vim and tmux ---"
+cd ~
+
+echo "> Pulling from the server.."
+cd ~/dotfiles
+git pull origin master
+echo "..done"
+
+echo "> copy the new .vimrc file "
+sudo cp ~/dotfiles/.vimrc ~/
+echo "..done"
+
+
+echo "> copy the new .tmux.conf file"
+cp ~/dotfiles/.tmux.conf ~/
+echo "..done"
+
+echo "> Copy YouCompleteMe configuration file.."
+cp ~/dotfiles/.ycm_extra_conf.py ~/
+echo "..done"
+
+echo "> Copy colorschemes.."
+cp ~/dotfiles/vim/colors/. ~/.vim/colors/ -R
+echo "..done"
+
+echo "> Installing Vim Plugins.."
+vim +PluginInstall +qall
+echo "..done"
+echo ""
+echo ""
+echo "Installation done"
