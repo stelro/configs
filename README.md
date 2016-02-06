@@ -32,6 +32,7 @@ Vim Ruby
 Vim Javascript
 Vim Coffee-Script
 vim Surround
+vim SingleCompile
 ```
 
 ##Tmux
@@ -41,13 +42,15 @@ prefix key :			Ctr+a
 ##Vim
 **Custom keybindings**
 ```
-leader key :			comma (,)
-NERDTree Toggle :		Ctr-z
+leader key           :	comma (,)
+NERDTree Toggle      :  Ctr-z
 NERDTree open in tab :	Space
 Multiple cursor next :	Ctr-d
 Multiple cursor quit :	Esc
 Run Ruby Test file	 :  ,t
 Run Ruby Nearest test:	,T
+Compile Single File	 :  ,c
+Compile And run		 :  ,r
 ```
 
 Vim auto-generate C/C++ header file Guards

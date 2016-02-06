@@ -24,6 +24,7 @@ Plugin 'vim-ruby/vim-ruby'
 Plugin 'pangloss/vim-javascript'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'tpope/vim-surround'
+Plugin 'xuhdev/SingleCompile'
 
 call vundle#end()
 filetype plugin indent on
@@ -163,6 +164,12 @@ let NERDTreeMapOpenInTab='<SPACE>'
 "Custom functions C/C++
 "---------------------------------
 
+"compile and run single source file without leaving vim
+
+nmap <leader>c :SCCompile<cr>
+nmap <leader>r :SCCompileRun<cr>
+
+
 "auto C/C++ header files guards
 function! s:insert_gates()
   let gatename = substitute(toupper(expand("%:t")), "\\.", "_", "g")
@@ -197,7 +204,7 @@ function! RunTests(filename)
   else
     if filereadable("Gemfile")
       exec ":!bundle exec rspec --color " . a:filename
-    else
+  else
       exec ":!rspec --color " . a:filename
     end
   end
