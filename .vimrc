@@ -24,7 +24,7 @@ Plugin 'vim-ruby/vim-ruby'
 Plugin 'pangloss/vim-javascript'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'tpope/vim-surround'
-Plugin 'xuhdev/SingleCompile'
+Plugin 'scrooloose/nerdcommenter'
 
 call vundle#end()
 filetype plugin indent on
@@ -37,23 +37,27 @@ set number				"show line numbers
 set ruler				"show row and column in footer
 set noeol
 set binary
+set visualbell
 set showcmd
-set tw=80				"text warp 
+set nowrap
+set tw=120   			"text warp 
 set showmatch			"show bracket matches
 set visualbell			"enable visal bell (disable audio bell)
 set laststatus=2		
 set autoread
-set ts=2				"set indent on 4 spaces
+set ts=4				"set indent on 4 spaces
 set sw=2
 set et
 set numberwidth=3
 set textwidth=0
 set autoindent			"set auto ident
-set cindent				"set C ident
+set smartindent				"set C ident
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set noexpandtab
+set cul						"hightlight the current line"
+
 
 set laststatus=2
 "sets how many lines of history VIM has to remember
@@ -165,10 +169,9 @@ let NERDTreeMapOpenInTab='<SPACE>'
 "---------------------------------
 
 "compile and run single source file without leaving vim
-
-nmap <leader>c :SCCompile<cr>
-nmap <leader>r :SCCompileRun<cr>
-
+autocmd filetype cpp nnoremap <leader>r :w <bar> exec '!g++ -std=c++14 -Wall '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
+autocmd filetype c nnoremap <leader>r :w <bar> exec '!gcc -Wall'.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
+autocmd filetype ruby nnoremap <leader>r :w <bar> exec '!ruby '.shellescape('%')<CR>
 
 "auto C/C++ header files guards
 function! s:insert_gates()
@@ -240,3 +243,9 @@ endfunction
 " run test runner
 map <leader>t :call RunTestFile()<cr>
 map <leader>T :call RunNearestTest()<cr>
+
+"switch between header/source with Ctr+2
+map <C-2> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
+
+"elimination delays on ESC in vim and zsh
+set timeoutlen=1000 ttimeoutlen=0
