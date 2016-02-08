@@ -49,6 +49,9 @@ echo "> Copy colorschemes.."
 cp ~/dotfiles/vim/colors/. ~/.vim/colors/ -R
 echo "..done"
 
+sudo apt-get install build-essential cmake
+sudo apt-get install python-dev
+
 echo "> Installing Vim Plugins.."
 vim +PluginInstall +qall
 echo "..done"
