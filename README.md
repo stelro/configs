@@ -47,6 +47,7 @@ NERDTree Toggle						: Ctr-z
 NERDTree open in tab				: Space
 Multiple cursor next				: Ctr-d
 Multiple cursor quit				: Esc
+ctrlp invoke find file mode			: ,f
 Run Ruby Test file					: ,t
 Run Ruby Nearest test				: ,T
 Compile And run						: ,r
