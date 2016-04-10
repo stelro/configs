@@ -10,6 +10,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/syntastic'
@@ -27,6 +28,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'kien/ctrlp.vim'
 Plugin 'othree/html5-syntax.vim'
 Plugin 'tpope/vim-endwise'
+Plugin 'fholgado/minibufexpl.vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -69,11 +71,7 @@ let mapleader = ","
 "NERDTree key mapping
 map <C-z> :NERDTreeToggle<CR>
 
-"let g:airline_powerline_fonts = 1
-"set guifont=Inconsolata\ for\ Powerline
-"smarter tab line
-"let g:airline#extensions#tabline#enabled = 1
-"let g:airline_theme='powerlineish'
+
 "Highlightin for class scope
 let g:cpp_class_scope_highlight = 1
 
@@ -89,6 +87,7 @@ set statusline=%F%m%r%h%w\ %{fugitive#statusline()}\ [%l,%c]\ [%L,%p%%]\ %=\%y\ 
 "set dark background and color scheme
 
 colorscheme base16-railscasts
+set background=dark
 highlight Normal ctermbg=235 
 
  "set up some custom colors
