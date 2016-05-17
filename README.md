@@ -77,6 +77,20 @@ To test your color sheme:
 ./script/colortest
 ```
 
+##Gruvbox (Current Theme)
+
+![Gruvbox](http://postimg.org/image/4lgztm4cx/)
+
+**Vim** | [gruvbox](https://github.com/morhetz/gruvbox), by Thayer Williams
+
+	let g:gruvbox_italic=1 before colorscheme gruvbox
+
+**Colors used by Gnome Terminal**
+
+![Railscasts1](https://camo.githubusercontent.com/cdb2f2e986c564b515c0c698e6c45b4ab5d725a9/687474703a2f2f692e696d6775722e636f6d2f776136363678672e706e67)
+
+Typeface used by Terminal [Fira Mono](http://www.carrois.com/typefaces/FiraSans/#!layout=specimen)
+
 ##Railscasts Theme
 
 ![Railscast](http://s27.postimg.org/ng4sffkr7/railscast.png)
