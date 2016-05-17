@@ -79,9 +79,9 @@ To test your color sheme:
 
 ##Gruvbox (Current Theme)
 
-![Gruvbox](http://postimg.org/image/4lgztm4cx/)
+![Gruvbox](http://s32.postimg.org/if5cinwyd/687474703a2f2f692e696d6775722e636f6d2f476b496c38.png)
 
-**Vim** | [gruvbox](https://github.com/morhetz/gruvbox), by Thayer Williams
+**Vim** | [gruvbox](https://github.com/morhetz/gruvbox)
 
 	let g:gruvbox_italic=1 before colorscheme gruvbox
 
