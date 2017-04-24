@@ -67,10 +67,8 @@ set history=1000
 " set leader key to comma
 let mapleader = ","
 
-
 "NERDTree key mapping
 map <C-z> :NERDTreeToggle<CR>
-
 
 "Highlightin for class scope
 let g:cpp_class_scope_highlight = 1
@@ -85,32 +83,7 @@ nnoremap Q <nop>
 set statusline=%F%m%r%h%w\ %{fugitive#statusline()}\ [%l,%c]\ [%L,%p%%]\ %=\%y\ %n\ %P
 
 "set dark background and color scheme
-
-colorscheme base16-railscasts
-set background=dark
-highlight Normal ctermbg=235 
-
- "set up some custom colors
-highlight clear SignColumn
-highlight VertSplit    ctermbg=236
-highlight ColorColumn  ctermbg=237
-highlight LineNr       ctermbg=236 ctermfg=240
-highlight CursorLineNr ctermbg=236 ctermfg=240
-highlight CursorLine   ctermbg=236
-highlight StatusLineNC ctermbg=238 ctermfg=0
-highlight StatusLine   ctermbg=240 ctermfg=12
-highlight IncSearch    ctermbg=3   ctermfg=1
-highlight Search       ctermbg=1   ctermfg=3
-highlight Visual       ctermbg=3   ctermfg=0
-highlight Pmenu        ctermbg=240 ctermfg=12
-highlight PmenuSel     ctermbg=3   ctermfg=1
-highlight SpellBad     ctermbg=0   ctermfg=1
-
-" highlight the status bar when in insert mode
-if version >= 700
-  au InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
-  au InsertLeave * hi StatusLine ctermbg=240 ctermfg=12
-endif
+color dracula
 
 " ctrlp config
 let g:ctrlp_map = '<leader>f'
@@ -150,6 +123,7 @@ let NERDTreeMapOpenInTab='<SPACE>'
 autocmd filetype cpp nnoremap <leader>r :w <bar> exec '!g++ -std=c++14 -Wall -Wextra '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype c nnoremap <leader>r :w <bar> exec '!gcc -Wall'.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype ruby nnoremap <leader>r :w <bar> exec '!ruby '.shellescape('%')<CR>
+autocmd filetype js nnoremap <leader>r :w <bar> exec '!node '.shellescape('%')<CR>
 
 "auto C/C++ header files guards
 function! s:insert_gates()
@@ -161,66 +135,6 @@ function! s:insert_gates()
 endfunction
 autocmd BufNewFile *.{h,hpp} call <SID>insert_gates()
 noremap <Leader>s :update<CR>
-
-"let g:syntastic_cpp_compiler = 'clang++'
-"let g:syntastic_cpp_compiler_options = 'std=c++11 -stdlib-libc++'
-
-"---------------------------------
-"Custom functions Ruby on Rails
-"---------------------------------
-
-function! RunTests(filename)
-  " Write the file and run tests for the given filename
-  :w
-  :silent !clear
-  if match(a:filename, '\.feature$') != -1
-    exec ":!bundle exec cucumber " . a:filename
-  elseif match(a:filename, '_test\.rb$') != -1
-    if filereadable("script/testrb")
-      exec ":!script/testrb " . a:filename
-    else
-      exec ":!ruby -Itest " . a:filename
-    end
-  else
-    if filereadable("Gemfile")
-      exec ":!bundle exec rspec --color " . a:filename
-  else
-      exec ":!rspec --color " . a:filename
-    end
-  end
-endfunction
-
-function! SetTestFile()
-  " set the spec file that tests will be run for.
-  let t:grb_test_file=@%
-endfunction
-
-function! RunTestFile(...)
-  if a:0
-    let command_suffix = a:1
-  else
-    let command_suffix = ""
-  endif
-
-  " run the tests for the previously-marked file.
-  let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\)$') != -1
-  if in_test_file
-    call SetTestFile()
-  elseif !exists("t:grb_test_file")
-    return
-  end
-  call RunTests(t:grb_test_file . command_suffix)
-endfunction
-
-function! RunNearestTest()
-  let spec_line_number = line('.')
-  call RunTestFile(":" . spec_line_number . " -b")
-endfunction
-
-" run test runner
-map <leader>t :call RunTestFile()<cr>
-map <leader>T :call RunNearestTest()<cr>
-
 "switch between header/source with Ctr+2
 map <C-2> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 
