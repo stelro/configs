@@ -29,6 +29,7 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'othree/html5-syntax.vim'
 Plugin 'tpope/vim-endwise'
 Plugin 'fholgado/minibufexpl.vim'
+Plugin 'adimit/prolog.vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -49,15 +50,15 @@ set tw=120										"text warp
 set showmatch									"show bracket matches
 set visualbell								"enable visal bell (disable audio bell)
 set laststatus=2							"display status line always
-set ts=2											"set indent on 2 spaces
+set ts=4											"set indent on 2 spaces
 set et												"expand tab
 set numberwidth=3							"width of the gutter column used for numbering
 set textwidth=0								"prevent vim from automatically inserting line breaks in newly entered text
 set autoindent								"set auto ident
 set smartindent								"set C ident
-set tabstop=2									"tab stop in 2 tabs
-set softtabstop=2
-set shiftwidth=2
+set tabstop=4									"tab stop in 2 tabs
+set softtabstop=4
+set shiftwidth=4
 set noexpandtab
 set cul												"hightlight the current line"
 set clipboard=unnamed					"use the system clipboard
