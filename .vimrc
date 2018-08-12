@@ -50,6 +50,16 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
+Plugin 'majutsushi/tagbar'
+Plugin 'ervandew/supertab'
+Plugin 'BufOnly.vim'
+Plugin 'SirVer/ultisnips'
+Plugin 'craigemery/vim-autotag'
+Plugin 'Townk/vim-autoclose'
+Plugin 'tomtom/tcomment_vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'gregsexton/gitv'
+
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'tpope/vim-fugitive'
@@ -74,6 +84,8 @@ Plugin 'alvan/vim-closetag'
 Plugin 'mileszs/ack.vim'
 Plugin 'itchyny/lightline.vim'
 Plugin 'junegunn/goyo.vim'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 
 
 call vundle#end()
@@ -157,12 +169,38 @@ function! CurrentFileDir()
    return "e " . expand("%:p:h") . "/"
 endfunction
 
+" Enable Elite mode, No ARRRROWWS!!!!
+let g:elite_mode=1
+
+" Enable highlighting of the current line
+set cursorline
+
+" Vim-Airline Configuration
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1 
+let g:airline_theme='hybrid'
+let g:hybrid_custom_term_colors = 1
+let g:hybrid_reduced_contrast = 1 
+
 " I can't spell :(
 abbr conosle console
 abbr comopnent component
+abbr inlcude include
 
 "vim jsx
 let g:jsx_ext_required = 0
+
+" Syntastic Configuration
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_enable_elixir_checker = 1
+" let g:syntastic_elixir_checkers = ["elixir"]
 
 "Highlightin for class scope
 let g:cpp_class_scope_highlight = 1
@@ -186,8 +224,21 @@ let g:ctrlp_max_height = 30
 let g:ctrlp_working_path_mode = 0
 let g:ctrlp_match_window_reversed = 0
 
+" Shortcuts
+nnoremap <Leader>o :Files<CR> 
+nnoremap <Leader>O :CtrlP<CR>
+nnoremap <Leader>w :w<CR>
+
 "change the GUI cursor
 :filetype plugin on
+
+" Disable arrow movement, resize splits instead.
+if get(g:, 'elite_mode')
+	nnoremap <Up>    :resize +2<CR>
+	nnoremap <Down>  :resize -2<CR>
+	nnoremap <Left>  :vertical resize +2<CR>
+	nnoremap <Right> :vertical resize -2<CR>
+endif
 
 " ----------------------------------------------------------------------------
 " CUSTOM COMMANDS AND FUNCTIONS
@@ -347,7 +398,7 @@ nmap \p :ProseMode<CR>
 
 " Make sure colored syntax mode is on, and make it Just Work with 256-color terminals.
 "set background=light
-colorscheme dracula
+colorscheme onedark
 let g:rehash256 = 1 " Something to do with Molokai?
 "colorscheme molokai
 if !has('gui_running')
