@@ -1,4 +1,4 @@
- "        _
+"        _
 " __   _(_)_ __ ___  _ __ ___
 " \ \ / / | '_ ` _ \| '__/ __|
 "  \ V /| | | | | | | | | (__
@@ -6,7 +6,7 @@
 "
 " Stel's .vimrc file
 "
-" Last Update: 20/10/2017
+" Last Update: 22/03/2019
 " stelmach.ro[at]gmail.com
 "
 
@@ -19,9 +19,6 @@ let mapleader = ","
 
 "NERDTree key mapping
 map <C-z> :NERDTreeToggle<CR>
-
-" You don't know what you're missing if you don't use this.
-nmap <C-e> :e#<CR>
 
 " unmap F1 help
 nmap <F1> <nop>
@@ -57,9 +54,8 @@ Plugin 'SirVer/ultisnips'
 Plugin 'craigemery/vim-autotag'
 Plugin 'Townk/vim-autoclose'
 Plugin 'tomtom/tcomment_vim'
-Plugin 'scrooloose/syntastic'
+"Plugin 'scrooloose/syntastic'
 Plugin 'gregsexton/gitv'
-
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'tpope/vim-fugitive'
@@ -75,7 +71,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'kien/ctrlp.vim'
 Plugin 'othree/html5-syntax.vim'
 Plugin 'tpope/vim-endwise'
-Plugin 'fholgado/minibufexpl.vim'
+"Plugin 'fholgado/minibufexpl.vim'
 Plugin 'jalcine/cmake.vim'
 Plugin 'mattn/emmet-vim'
 Plugin 'plasticboy/vim-markdown'
@@ -86,7 +82,10 @@ Plugin 'itchyny/lightline.vim'
 Plugin 'junegunn/goyo.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-
+Plugin 'w0rp/ale'
+Plugin 'wakatime/vim-wakatime'
+Plugin 'skywind3000/asyncrun.vim'
+Plugin 'jiangmiao/auto-pairs'
 
 call vundle#end()
 filetype plugin indent on
@@ -142,15 +141,15 @@ set scroll=4                " Number of lines to scroll with ^U/^D
 set scrolloff=15            " Keep cursor away from this many chars top/bot
 set sessionoptions-=options " Don't save runtimepath in Vim session (see tpope/vim-pathogen docs)
 set shiftround              " Shift to certain columns, not just n spaces
-set shiftwidth=4            " Number of spaces to shift for autoindent or >,<
+set shiftwidth=2            " Number of spaces to shift for autoindent or >,<
 set shortmess+=A            " Don't bother me when a swapfile exists
 set showbreak=              " Show for lines that have been wrapped, like Emacs
 set showmatch               " Hilight matching braces/parens/etc.
 set sidescrolloff=3         " Keep cursor away from this many chars left/right
 set smartcase               " Lets you search for ALL CAPS
-set softtabstop=4           " Spaces 'feel' like tabs
+set softtabstop=2           " Spaces 'feel' like tabs
 set suffixes+=.pyc          " Ignore these files when tab-completing
-set tabstop=4               " The One True Tab
+set tabstop=2               " The One True Tab
 set textwidth=100           " 100 is the new 80
 set notitle                 " Don't set the title of the Vim window
 set wildmenu                " Show possible completions on command line
@@ -172,6 +171,12 @@ endfunction
 " Enable Elite mode, No ARRRROWWS!!!!
 let g:elite_mode=1
 
+"Make files async from root folder
+nnoremap <Leader>m :Dispatch! make -C build<CR>
+
+"Enable eoplete ( autocomplete ) at startup
+let g:deoplete#enable_at_startup = 1
+
 " Enable highlighting of the current line
 set cursorline
 
@@ -182,26 +187,31 @@ let g:airline_theme='hybrid'
 let g:hybrid_custom_term_colors = 1
 let g:hybrid_reduced_contrast = 1 
 
+" vim jsx
+let g:jsx_ext_required = 0
+
+" Toggle Tagbar
+nmap <F8> :TagbarToggle<CR>
+
+"Reloads the file for prettier
+autocmd BufWritePost *.js AsyncRun -post=checktime ./node_modules/.bin/eslint --fix %
+
+
 " I can't spell :(
 abbr conosle console
 abbr comopnent component
 abbr inlcude include
 
-"vim jsx
-let g:jsx_ext_required = 0
-
 " Syntastic Configuration
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
-" let g:syntastic_enable_elixir_checker = 1
-" let g:syntastic_elixir_checkers = ["elixir"]
-
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+"
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_cpp_compiler_options = '-std=c++17'
+"
 "Highlightin for class scope
 let g:cpp_class_scope_highlight = 1
 
@@ -212,7 +222,7 @@ let g:cpp_experimental_template_highlight = 1
 nnoremap Q <nop>
 
 " put git status, column/row number, total lines, and percentage in status
-" set statusline=%F%m%r%h%w\ %{fugitive#statusline()}\ [%l,%c]\ [%L,%p%%]\ %=\%y\ %n\ %P
+ set statusline=%F%m%r%h%w\ %{fugitive#statusline()}\ [%l,%c]\ [%L,%p%%]\ %=\%y\ %n\ %P
 
 " if version >= 700
 "   au InsertEnter * hi StatusLine ctermfg=237 ctermbg=2
@@ -220,13 +230,17 @@ nnoremap Q <nop>
 " endif
 
 let g:ctrlp_map = '<leader>f'
-let g:ctrlp_max_height = 30
-let g:ctrlp_working_path_mode = 0
+let g:ctrlp_max_height = 15
+let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_match_window_reversed = 0
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|(build|cmake-build-debug|build-release|bin)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
 
 " Shortcuts
-nnoremap <Leader>o :Files<CR> 
-nnoremap <Leader>O :CtrlP<CR>
+nnoremap <Leader>qq :q!<CR> 
 nnoremap <Leader>w :w<CR>
 
 "change the GUI cursor
@@ -249,72 +263,13 @@ command! Q q
 command! W w
 command! Wq wq
 
-" Trim spaces at EOL and retab. I run `:CLEAN` a lot to clean up files.
-command! TEOL %s/\s\+$//
-command! CLEAN retab | TEOL
-
 " Close all buffers except this one
 command! BufCloseOthers %bd|e#
-
-" Highlight YAML frontmatter in Markdown files
-let g:vim_markdown_frontmatter = 1
-
-" ALE
-"let g:ale_sign_warning = '▲'
-"let g:ale_sign_error = '✗'
-""highlight link ALEWarningSign String
-""highlight link ALEErrorSign Title
-
-"" Lightline
-"let g:lightline = {
-"\ 'colorscheme': 'solarized',
-"\ 'active': {
-"\   'left': [['mode', 'paste'], ['filename', 'modified']],
-"\   'right': [['lineinfo'], ['percent'], ['readonly', 'linter_warnings', 'linter_errors', 'linter_ok']]
-"\ },
-"\ 'component_expand': {
-"\   'linter_warnings': 'LightlineLinterWarnings',
-"\   'linter_errors': 'LightlineLinterErrors',
-"\   'linter_ok': 'LightlineLinterOK'
-"\ },
-"\ 'component_type': {
-"\   'readonly': 'error',
-"\   'linter_warnings': 'warning',
-"\   'linter_errors': 'error'
-"\ },
-"\ }
-"function! LightlineLinterWarnings() abort
-  "let l:counts = ale#statusline#Count(bufnr(''))
-  "let l:all_errors = l:counts.error + l:counts.style_error
-  "let l:all_non_errors = l:counts.total - l:all_errors
-  "return l:counts.total == 0 ? '' : printf('%d ◆', all_non_errors)
-"endfunction
-"function! LightlineLinterErrors() abort
-  "let l:counts = ale#statusline#Count(bufnr(''))
-  "let l:all_errors = l:counts.error + l:counts.style_error
-  "let l:all_non_errors = l:counts.total - l:all_errors
-  "return l:counts.total == 0 ? '' : printf('%d ✗', all_errors)
-"endfunction
-"function! LightlineLinterOK() abort
-  "let l:counts = ale#statusline#Count(bufnr(''))
-  "let l:all_errors = l:counts.error + l:counts.style_error
-  "let l:all_non_errors = l:counts.total - l:all_errors
-  "return l:counts.total == 0 ? '✓ ' : ''
-"endfunction
-
-"" Update and show lightline but only if it's visible (e.g., not in Goyo)
-"autocmd User ALELint call s:MaybeUpdateLightline()
-"function! s:MaybeUpdateLightline()
-  "if exists('#lightline')
-    "call lightline#update()
-  "end
-"endfunction
-
 
 "File-type detection
 augroup project
     autocmd!
-    autocmd BufRead, BufNewFile *.h, *.c set filetype=c.doxygen
+    autocmd BufRead, BufNewFile *.h, *.c, *.hh, *.hpp, *.cc, *.cpp set filetype=c.doxygen
 augroup END
 
 "Multiple cursors mapping
@@ -326,20 +281,14 @@ map /  <Plug>(incsearch-forward)
 map ?  <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
 
-
-" Tell ack.vim to use ag (the Silver Searcher) instead
-let g:ackprg = 'ag --vimgrep'
-
 " GitGutter styling to use · instead of +/-
-let g:gitgutter_sign_added = '∙'
+let g:gitgutter_sign_added = '.'
 let g:gitgutter_sign_modified = '∙'
-let g:gitgutter_sign_removed = '∙'
+let g:gitgutter_sign_removed = '-'
 let g:gitgutter_sign_modified_removed = '∙'
-
 
 "YCM global file
 nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
-"let g:ycm_global_ycm_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 "Do not ask when starting vim
 let g:ycm_confirm_extra_conf = 0
@@ -354,12 +303,12 @@ let NERDTreeMapOpenInTab='<SPACE>'
 
 "compile and run single source file without leaving vim
 autocmd filetype cpp nnoremap <leader>r :w <bar> exec '!g++ -std=c++17 -Wall -Wextra '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
-autocmd filetype c nnoremap <leader>r :w <bar> exec '!gcc -Wall'.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
+autocmd filetype c nnoremap <leader>r :w <bar> exec '!gcc -Wall '.shellescape('%').' -o top .shellescape('%:r').' && ./'.shellescape('%:r')<CR>
 autocmd filetype ruby nnoremap <leader>r :w <bar> exec '!ruby '.shellescape('%')<CR>
-autocmd filetype js nnoremap <leader>r :w <bar> exec '!/usr/bin/nodejs '.shellescape('%')<CR>
+autocmd filetype js nnoremap <leader>r :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
 autocmd filetype lua nnoremap <leader>r :w <bar> exec '!/usr/bin/lua5.3 '.shellescape('%')<CR>
-autocmd filetype jsx nnoremap <leader>r :w <bar> exec '!/usr/bin/nodejs '.shellescape('%')<CR>
-autocmd filetype javascript.jsx nnoremap <leader>r :w <bar> exec '!/usr/bin/nodejs '.shellescape('%')<CR>
+autocmd filetype jsx nnoremap <leader>r :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
+autocmd filetype javascript.jsx nnoremap <leader>r :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
 
 "auto C/C++ header files guards
 function! s:insert_gates()
@@ -369,10 +318,10 @@ function! s:insert_gates()
   execute "normal! Go#endif /* " . gatename . " */"
   normal! kk
 endfunction
-autocmd BufNewFile *.{h,hpp} call <SID>insert_gates()
+autocmd BufNewFile *.{h,hpp,hh} call <SID>insert_gates()
 noremap <Leader>s :update<CR>
 "switch between header/source with Ctr+2
-map <C-2> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
+map <C-2> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,.hh,.cc,:s,.X123X$,.cpp,<CR>
 
 "elimination delays on ESC in vim and zsh
 set timeoutlen=1000 ttimeoutlen=0
@@ -397,8 +346,9 @@ nmap \p :ProseMode<CR>
 " ----------------------------------------------------------------------------
 
 " Make sure colored syntax mode is on, and make it Just Work with 256-color terminals.
-"set background=light
-colorscheme onedark
+set background=dark
+colorscheme gruvbox
+"colorscheme molokai
 let g:rehash256 = 1 " Something to do with Molokai?
 "colorscheme molokai
 if !has('gui_running')
@@ -482,5 +432,7 @@ highlight link markdownCode Delimiter
 highlight link markdownCodeBlock Delimiter
 highlight link markdownListMarker Todo
 
-"call ale#Set('cpp_gcc_executable', 'gcc')
-"call ale#Set('cpp_gcc_options', '-std=c++14 -Wall')
+"ale config
+let g:ale_sign_error = '●' "Less aggressive than the default '>>'
+let g:ale_sign_warning = '.'
+let g:ale_lint_on_enter = 0 "Less dsitracting when opening new file
