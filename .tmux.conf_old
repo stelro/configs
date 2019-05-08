@@ -1,0 +1,74 @@
+###########################
+#  Configuration
+###########################
+
+set -g default-terminal "screen-256color"
+
+# increase scroll back history
+set -g history-limit 5000
+
+#start window index at 1
+set -g base-index 1
+
+#start pane index at 1
+setw -g pane-base-index 1
+
+#hightlight window when it has new activity
+setw -g monitor-activity on
+set -g visual-activity on
+
+###########################
+# Status Bar
+###########################
+
+
+#enable utf-8 support in status bar
+#set -g status-utf8 on
+
+#set refresh interval for status bar
+set -g status-interval 30
+
+#center the status bar
+set -g status-justify left
+
+# show session, window, pane in left status bar
+set -g status-left-length 40
+set -g status-left '#[fg=colour154]#S#[fg=colour105] #I:#P #[default]'
+
+# show hostname, date, time, and battery in right status bar
+set-option -g status-right '#[fg=colour154]#H#[default] %m/%d/%y %I:%M\
+ #[fg=red]#(battery discharging)#[default]#(battery charging)'
+
+ # Colors - derived from Powerline Double Cyan by Jim Myhrberg
+ set -g status-interval 0
+ set -g status-fg colour240
+ set -g status-bg colour233
+ set -g status-left "#[fg=colour222] #{host} "
+ set -g status-right "#[fg=colour222]:#{session_name} : #{window_index}.#{pane_index} "
+ set -g window-status-format "#[bg=colour233,fg=colour240]  ⋅#I⋅ #W "
+ set -g window-status-current-format "#[bg=colour233,fg=colour240,nobold] 《#I》#W #[fg=black,bg=colour233,nobold]"
+ set -g window-status-current-bg colour39
+ set -g window-status-current-fg colour235
+ set -g window-status-activity-bg colour245 # fg and bg are flipped here due to
+ set -g window-status-activity-fg colour233 # a bug in tmux
+ set -g window-status-separator ""
+ set -g status-justify centre
+ set -g pane-border-bg default
+ set -g pane-border-fg colour238
+ set -g pane-active-border-bg default
+ set -g pane-active-border-fg colour39
+ set -g display-panes-colour colour233
+ set -g display-panes-active-colour colour245
+ set -g clock-mode-colour colour39
+ set -g clock-mode-style 24
+ set -g message-bg black
+ set -g message-fg colour39
+ set -g message-command-bg colour233
+ set -g message-command-fg black
+ set -g mode-bg colour39
+ set -g mode-fg colour232
+
+# tmux prefix
+unbind C-b
+set -g prefix C-a
+set -s escape-time 0

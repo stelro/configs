@@ -6,300 +6,318 @@
 "
 " Stel's .vimrc file
 "
-" Last Update: 22/03/2019
+" Last Update: 08/05/2019
 " stelmach.ro[at]gmail.com
 "
-
-" ----------------------------------------------------------------------------
-" KEY MAPS
-" ----------------------------------------------------------------------------
-
-" set leader key to comma
-let mapleader = ","
-
-"NERDTree key mapping
-map <C-z> :NERDTreeToggle<CR>
-
-" unmap F1 help
-nmap <F1> <nop>
-imap <F1> <nop>
-
-" Move between open buffers.
-nnoremap <Tab> :bnext<CR>
-nnoremap <S-Tab> :bprevious<CR>
-
-" These are things that I mistype and want ignored.
-nmap Q  <silent>
-nmap q: <silent>
-nmap K  <silent>
-
-set encoding=utf-8
-set nocompatible
-filetype off
+set nocompatible              " be iMproved, required
+filetype off                  " required
 
 " ----------------------------------------------------------------------------
 " PLUGINS
 " ----------------------------------------------------------------------------
 
-"set the runtime path to include Vundle and initialize
+" set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-Plugin 'gmarik/Vundle.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'majutsushi/tagbar'
-Plugin 'ervandew/supertab'
-Plugin 'BufOnly.vim'
-Plugin 'SirVer/ultisnips'
-Plugin 'craigemery/vim-autotag'
-Plugin 'Townk/vim-autoclose'
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
 Plugin 'tomtom/tcomment_vim'
-"Plugin 'scrooloose/syntastic'
-Plugin 'gregsexton/gitv'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'jistr/vim-nerdtree-tabs'
+"Keep Plugin commands between vundle#begin/end.
 Plugin 'tpope/vim-fugitive'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'haya14busa/incsearch.vim'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'honza/vim-snippets'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'pangloss/vim-javascript'
+" :GV - commit browser
+" :GV! only commits for current file
+"  o or <cr> on a commit to display the content of it
+"  o or <cr> on commits to display the diff in the range
+"  O opens a new tab instead
+"  gb for :Gbrowse
+"  ]] and [[ to move between commits
+"  . to start command-line with :Git [CURSOR] SHA à la fugitive
+"  q to close
+Plugin 'junegunn/gv.vim'
+" Sourdings, parantheses, brackes, quotes, XML Tags 
+" with cs"' to change from "" to ''
 Plugin 'tpope/vim-surround'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'kien/ctrlp.vim'
-Plugin 'othree/html5-syntax.vim'
-Plugin 'tpope/vim-endwise'
-"Plugin 'fholgado/minibufexpl.vim'
-Plugin 'jalcine/cmake.vim'
-Plugin 'mattn/emmet-vim'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'mxw/vim-jsx'
-Plugin 'alvan/vim-closetag'
-Plugin 'mileszs/ack.vim'
-Plugin 'itchyny/lightline.vim'
-Plugin 'junegunn/goyo.vim'
-Plugin 'vim-airline/vim-airline'
+Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'w0rp/ale'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'easymotion/vim-easymotion'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'scrooloose/nerdTree'
+Plugin 'vim-scripts/argtextobj.vim'
+" User defined operators/actions
+Plugin 'kana/vim-operator-user'
+Plugin 'michaeljsmith/vim-indent-object'
+Plugin 'christoomey/vim-sort-motion'
+Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown' 
+" better cooperation with tmux
+Plugin 'christoomey/vim-tmux-navigator'
+" gutter for marks
+Plugin 'kshenoy/vim-signature'
+" Vim plug for switching between companion source files (e.g. .h and .cpp)
+Plugin 'derekwyatt/vim-fswitch'
+Plugin 'rhysd/vim-clang-format'
+Plugin 'sbdchd/neoformat'
+" session management
+Plugin 'tpope/vim-obsession'
+Plugin 'dhruvasagar/vim-prosession'
+Plugin 'gikmx/ctrlp-obsession'
+" fast searching
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+" Snippets
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'kracejic/snippetinabox.vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'majutsushi/tagbar'
+Plugin 'joereynolds/gtags-scope'
+" :Search :SearchBuffers :SearchReset :SearchBuffersReset
+Plugin 'vim-scripts/MultipleSearch'
+Plugin 'vim-scripts/visual-increment'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'wakatime/vim-wakatime'
-Plugin 'skywind3000/asyncrun.vim'
-Plugin 'jiangmiao/auto-pairs'
+"Themes
+Plugin 'tomasr/molokai'
+Plugin 'jpo/vim-railscasts-theme'
+Plugin 'morhetz/gruvbox'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'chriskempson/base16-vim'
+Plugin 'jnurmine/zenburn'
+Plugin 'kracejic/themeinabox.vim'
+
+let g:colorizer_startup = 0
 
 call vundle#end()
 filetype plugin indent on
+" To ignore plugin indent changes, instead use:
+filetype plugin on
 
 " ----------------------------------------------------------------------------
-" OPTIONS
+" GENERAL SETTINGS 
 " ----------------------------------------------------------------------------
 
-set autoindent              " Carry over indenting from previous line
-set autoread                " Don't bother me hen a file changes
-set autowrite               " Write on :next/:prev/^Z
-set backspace=indent,eol,start
-                            " Allow backspace beyond insertion point
-set cindent                 " Automatic program indenting
-set cinkeys-=0#             " Comments don't fiddle with indenting
-set cino=                   " See :h cinoptions-values
-set commentstring=\ \ #%s   " When folds are created, add them to this
-set copyindent              " Make autoindent use the same chars as prev line
-set directory-=.            " Don't store temp files in cwd
-set encoding=utf8           " UTF-8 by default
-set expandtab               " No tabs
-set fileformats=unix,dos,mac  " Prefer Unix
-set fillchars=vert:\ ,stl:\ ,stlnc:\ ,fold:-,diff:┄
-                            " Unicode chars for diffs/folds, and rely on
-                            " Colors for window borders
-silent! set foldmethod=marker " Use braces by default
-set formatoptions=tcqn1     " t - autowrap normal text
-                            " c - autowrap comments
-                            " q - gq formats comments
-                            " n - autowrap lists
-                            " 1 - break _before_ single-letter words
-                            " 2 - use indenting from 2nd line of para
-set hidden                  " Don't prompt to save hidden windows until exit
-set history=200             " How many lines of history to save
-set hlsearch                " Hilight searching
-set ignorecase              " Case insensitive
-set incsearch               " Search as you type
-set infercase               " Completion recognizes capitalization
-set laststatus=2            " Always show the status bar
-set linebreak               " Break long lines by word, not char
-"set list                    " Show whitespace as special chars - see listchars
-set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:· " Unicode characters for various things
-set matchtime=2             " Tenths of second to hilight matching paren
-set modelines=5             " How many lines of head & tail to look for ml's
-silent! set mouse=nvc       " Use the mouse, but not in insert mode
-set nobackup                " No backups left after done editing
-"set nonumber                " No line numbers to start
-set visualbell t_vb=        " No flashing or beeping at all
-set nowritebackup           " No backups made while editing
-set printoptions=paper:letter " US paper
-set ruler                   " Show row/col and percentage
-set scroll=4                " Number of lines to scroll with ^U/^D
-set scrolloff=15            " Keep cursor away from this many chars top/bot
-set sessionoptions-=options " Don't save runtimepath in Vim session (see tpope/vim-pathogen docs)
-set shiftround              " Shift to certain columns, not just n spaces
-set shiftwidth=2            " Number of spaces to shift for autoindent or >,<
-set shortmess+=A            " Don't bother me when a swapfile exists
-set showbreak=              " Show for lines that have been wrapped, like Emacs
-set showmatch               " Hilight matching braces/parens/etc.
-set sidescrolloff=3         " Keep cursor away from this many chars left/right
-set smartcase               " Lets you search for ALL CAPS
-set softtabstop=2           " Spaces 'feel' like tabs
-set suffixes+=.pyc          " Ignore these files when tab-completing
-set tabstop=2               " The One True Tab
+syntax on
+let mapleader = " "         "set leader key to comma
+set number  "Show line numbers
+set relativenumber
+nmap <leader>num :set nu! <CR>:set rnu!<CR>
+set wrap  "enable wraping
+set linebreak   "Break lines at word (requires Wrap lines)
+set nolist         " list disables linebreak
+set scrolloff=5         " 2 lines above/below cursor when scrolling
+set noswapfile  " turn off swapfiles
+set wrapmargin=0  "Disable line wrap
+set ruler   "Show row and column ruler information
+set showbreak=+++   "Wrap-broken line prefix
+set showmatch   "Highlight matching brace
+set showcmd             " show command in bottom bar
+set title               " show file in titlebar
+set showmode            " show mode in status bar (insert/replace/...)
+"set visualbell  "Use visual bell (no beeping)
+set cursorline          " highlight current line
+set matchpairs+=<:>     " specially for html
+set hlsearch    "Highlight all search results
+set smartcase   "Enable smart-case search
+set ignorecase  "Always case-insensitive
+set incsearch   "Searches for strings incrementally
+set virtualedit=onemore  "allow to go one character behind the end of the line
+set autoindent  "Auto-indent new lines
+set expandtab   "Use spaces instead of tabs
+set shiftwidth=2    "Number of auto-indent spaces
+set smartindent "Enable smart-indent
+set smarttab    "Enable smart-tabs
+set softtabstop=2   "Number of spaces per Tab
+set wildmenu            " visual autocomplete for command menu
+set wildignore+=*.o,*.obj,*.bak,*.exe,*.py[co],*.swp,*~,*.pyc,.svn,*/cm/log/**,tags,*.jpg,*.png,*.jpeg,*.png,*.mesh,build*/**,build/**,*.sublime-workspace,*.svg,build2/**,build3/**
+set lazyredraw          " redraw only when we need to.
+set confirm             " get a dialog when :q, :w, or :wq fails
+set nobackup            " no backup~ files.
+set viminfo='20,\"500   " remember copy registers after quitting in the .viminfo file -- 20 jump links, regs up to 500 lines'
 set textwidth=100           " 100 is the new 80
-set notitle                 " Don't set the title of the Vim window
-set wildmenu                " Show possible completions on command line
-set wildmode=list:longest,full " List all options and complete
-set wildignore=*.class,*.o,*~,*.pyc,.git,node_modules  " Ignore certain files in tab-completion
-set number										"show line numbers
-"set relativenumber
+set hidden              " remember undo after quitting
+set history=150          " keep 50 lines of command history
+set mouse=v             " use mouse in visual mode (not normal,insert,command,help mode
+set t_ut=
+set previewheight=7
+" display whitespace
+set listchars=tab:>-,trail:~,extends:>,precedes:<
+"set listchars=eol: ,tab:>-,trail:~,extends:>,precedes:<
+
+set tags=./tags;/   "This will look in the current directory for 'tags', and work up the tree towards root until one is found.
+set cscopetag
+
+command! Ctagsgenerate :!ctags -R .
+command! Gtagsgenerate :!gtags
+
 " ----------------------------------------------------------------------------
 " ABBREVATIONS
 " ----------------------------------------------------------------------------
-
-" Typing `$c` on the command line expands to `:e` + the current path, so it's easy to edit a file in
-" the same directory as the current file.
-cnoremap $c e <C-\>eCurrentFileDir()<CR>
-function! CurrentFileDir()
-   return "e " . expand("%:p:h") . "/"
-endfunction
-
-" Enable Elite mode, No ARRRROWWS!!!!
-let g:elite_mode=1
-
-"Make files async from root folder
-nnoremap <Leader>m :Dispatch! make -C build<CR>
-
-"Enable eoplete ( autocomplete ) at startup
-let g:deoplete#enable_at_startup = 1
-
-" Enable highlighting of the current line
-set cursorline
-
-" Vim-Airline Configuration
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1 
-let g:airline_theme='hybrid'
-let g:hybrid_custom_term_colors = 1
-let g:hybrid_reduced_contrast = 1 
-
-" vim jsx
-let g:jsx_ext_required = 0
-
-" Toggle Tagbar
-nmap <F8> :TagbarToggle<CR>
-
-"Reloads the file for prettier
-autocmd BufWritePost *.js AsyncRun -post=checktime ./node_modules/.bin/eslint --fix %
-
-
 " I can't spell :(
 abbr conosle console
 abbr comopnent component
 abbr inlcude include
-
-" Syntastic Configuration
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-"
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_cpp_compiler_options = '-std=c++17'
-"
-"Highlightin for class scope
-let g:cpp_class_scope_highlight = 1
-
-"Highlightin of template function
-let g:cpp_experimental_template_highlight = 1
-
-"unmap ex mode: 'Type visual to go into Normal mode'
-nnoremap Q <nop>
-
-" put git status, column/row number, total lines, and percentage in status
- set statusline=%F%m%r%h%w\ %{fugitive#statusline()}\ [%l,%c]\ [%L,%p%%]\ %=\%y\ %n\ %P
-
-" if version >= 700
-"   au InsertEnter * hi StatusLine ctermfg=237 ctermbg=2
-"   au InsertLeave * hi StatusLine ctermbg=166 ctermfg=237
-" endif
-
-let g:ctrlp_map = '<leader>f'
-let g:ctrlp_max_height = 15
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_match_window_reversed = 0
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|(build|cmake-build-debug|build-release|bin)$',
-  \ 'file': '\v\.(exe|so|dll)$',
-  \ 'link': 'some_bad_symbolic_links',
-  \ }
-
-" Shortcuts
-nnoremap <Leader>qq :q!<CR> 
-nnoremap <Leader>w :w<CR>
-
-"change the GUI cursor
-:filetype plugin on
-
-" Disable arrow movement, resize splits instead.
-if get(g:, 'elite_mode')
-	nnoremap <Up>    :resize +2<CR>
-	nnoremap <Down>  :resize -2<CR>
-	nnoremap <Left>  :vertical resize +2<CR>
-	nnoremap <Right> :vertical resize -2<CR>
-endif
-
-" ----------------------------------------------------------------------------
-" CUSTOM COMMANDS AND FUNCTIONS
-" ----------------------------------------------------------------------------
-
+" These are things that I mistype and want ignored.
+nmap Q  <silent>
+nmap q: <silent>
+nmap K  <silent>
 " I always hit ":W" instead of ":w" because I linger on the shift key...
 command! Q q
 command! W w
 command! Wq wq
 
-" Close all buffers except this one
-command! BufCloseOthers %bd|e#
+" ----------------------------------------------------------------------------
+" SEARCHING
+" ----------------------------------------------------------------------------
+"let g:ctrlp_map = '<leader>f'
+let g:ctrlp_max_height = 8
+let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_match_window_reversed = 0
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|(build|cmake-build-debug|external|build-release|bin)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
 
-"File-type detection
-augroup project
+ " Default fzf layout
+    " - down / up / left / right
+    let g:fzf_layout = { 'down': '~30%' }
+    " [Buffers] Jump to the existing window if possible
+    let g:fzf_buffers_jump = 1
+    " [[B]Commits] Customize the options used by 'git log':
+    let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+    " [Tags] Command to generate tags file
+    let g:fzf_tags_command = 'ctags -R'
+    " [Commands] --expect expression for directly executing the command
+    let g:fzf_commands_expect = 'alt-enter,ctrl-x'
+
+    command! GGFiles call fzf#run(fzf#wrap({'source': 'if [ -d .git ] ; then git ls-files -co --exclude-standard ; elif [ -d .hg ] ; then hg locate ; else  find . ; fi', 'sink': 'e'}))
+
+" ----------------------------------------------------------------------------
+" KEY BINDING
+" ----------------------------------------------------------------------------
+
+nnoremap <Leader>f :GGFiles<cr>
+" nnoremap <C-p> :CtrlP<cr>
+nnoremap <Leader>. :BTags<cr>
+nnoremap <Leader>, :Tags<cr>
+nnoremap <Leader>q :CtrlPQuickfix<cr>
+nnoremap <Leader>ss :CtrlPObsession<CR>
+noremap <Leader>a :Buffers<CR>
+nnoremap <Leader>bb :Buffers<CR>
+nnoremap <Leader>bd :bd <CR>
+nnoremap gt :bnext<CR>
+nnoremap tg :bprev<CR>
+
+" Git-fugitive stuff
+nmap <leader>g :Gstatus<cr>gg<C-n>
+
+" open header fswitch
+nmap <silent> <F4> :FSHere<cr>
+nmap <silent> <Leader>of :FSHere<cr>
+nmap <silent> <Leader>ol :FSRight<cr>
+nmap <silent> <Leader>oL :FSSplitRight<cr>
+nmap <silent> <Leader>oh :FSLeft<cr>
+nmap <silent> <Leader>oH :FSSplitLeft<cr>
+nmap <silent> <Leader>ok :FSAbove<cr>
+nmap <silent> <Leader>oK :FSSplitAbove<cr>
+nmap <silent> <Leader>oj :FSBelow<cr>
+nmap <silent> <Leader>oJ :FSSplitBelow<cr>
+
+" Tagbar
+nmap <silent> <Leader>t :TagbarToggle<CR>
+nmap <silent> <Leader>tb :TagbarOpenAutoClose<CR>
+let g:tagbar_case_insensitive = 1
+" let g:tagbar_compact = 1
+let g:tagbar_indent = 1
+let g:tagbar_map_showproto = "r"
+let g:tagbar_map_togglefold = "<space>"
+let g:tagbar_sort = 0
+
+" increment numbers
+noremap + <c-a>
+noremap - <c-x>
+
+set splitbelow    " more natural split opening
+set splitright    " more natural split opening
+
+ "reload vimrc
+:nmap \rv :source $MYVIMRC<CR>
+
+nnoremap <Leader>w/ :vsplit<CR>
+nnoremap <Leader>wd :hide<CR>
+nnoremap <Leader>wl <C-w><C-w>
+
+nnoremap <Leader>pt :NERDTreeToggle<CR>
+
+"strip whitespace
+nnoremap <leader>sw :%s/\s\+$//<cr>:let @/=''<CR>
+command! Stripwhitespace :%s/\s\+$//
+command! Whitespacestrip :%s/\s\+$//
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+" duplicate lanes TODO
+nmap <leader>dd :s/\(^.*$\)/\1\r\1/<CR>:noh<CR>
+xmap <leader>dd :'<,'>s/\(.*\)/\1\r\1/<CR>:noh<CR>
+
+
+" ----------------------------------------------------------------------------
+" THEMES STUFF
+" ----------------------------------------------------------------------------
+set background=dark
+nnoremap <leader>1 :colorscheme railscasts<cr>:AirlineTheme dark<cr>
+nnoremap <leader>2 :colorscheme molokai<cr>:AirlineTheme base16_monokai<cr>
+nnoremap <leader>3 :colorscheme themeinabox<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>4 :colorscheme themeinabox-light<cr>:AirlineTheme sol<cr>
+nnoremap <leader>5 :colorscheme themeinabox-transparent<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>6 :colorscheme gruvbox<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>7 :colorscheme zenburn<cr>:AirlineTheme base16_eighties<cr>
+
+colorscheme themeinabox
+let g:airline_theme='base16_eighties'
+
+" ----------------------------------------------------------------------------
+" C++ Stuff
+" ----------------------------------------------------------------------------
+" CLANG FORMAT
+" default settings
+let g:clang_format#code_style = "llvm"
+let g:clang_format#style_options = {
+      \ "AllowShortFunctionsOnASingleLine": "Empty",
+      \ "AlwaysBreakTemplateDeclarations": "true",
+      \ "BreakBeforeBraces": "Allman",
+      \ "BreakConstructorInitializersBeforeComma": "true",
+      \ "IndentCaseLabels": "true",
+      \ "IndentWidth":     2,
+      \ "MaxEmptyLinesToKeep": 2,
+      \ "NamespaceIndentation": "Inner",
+      \ "ObjCBlockIndentWidth": 2,
+      \ "TabWidth": 2}
+
+augroup ClangFormatSettings
     autocmd!
-    autocmd BufRead, BufNewFile *.h, *.c, *.hh, *.hpp, *.cc, *.cpp set filetype=c.doxygen
+    " if you install vim-operator-user
+    autocmd FileType c,cpp,cc,objc,java,javascript map <buffer><Leader>c <Plug>(operator-clang-format)
+    autocmd FileType c,cpp,cc syntax clear cppSTLconstant
+
+    autocmd FileType vimwiki nmap <leader>tts :TaskWikiMod +sprint<CR>
+    autocmd FileType vimwiki nmap <leader>ttS :TaskWikiMod -sprint<CR>
 augroup END
 
-"Multiple cursors mapping
-let g:multi_cursor_next_key='<C-d>'
-let g:multi_cursor_quit_key='<Esc>'
+" Neoformat
+let g:neoformat_enabled_python = ['autopep8']
 
-" Use incsearch.vim to highlight as I search
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
-
-" GitGutter styling to use · instead of +/-
-let g:gitgutter_sign_added = '.'
-let g:gitgutter_sign_modified = '∙'
-let g:gitgutter_sign_removed = '-'
-let g:gitgutter_sign_modified_removed = '∙'
-
-"YCM global file
-nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
-let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-"Do not ask when starting vim
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_warning_symbol = '~'
-nnoremap gt :tabnext<CR>
-nnoremap tg :tabprev<CR>
-let NERDTreeMapOpenInTab='<SPACE>'
-
-"---------------------------------
-"Custom functions C/C++
-"---------------------------------
+nnoremap <Leader>cf :Neoformat<CR>
+vnoremap <Leader>cf :Neoformat<CR>
+" format line +-1
+autocmd FileType c,cpp,objc,java,javascript nnoremap <Leader>cc :.-1,.+1Neoformat<CR>
 
 "compile and run single source file without leaving vim
 autocmd filetype cpp nnoremap <leader>r :w <bar> exec '!g++ -std=c++17 -Wall -Wextra '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
@@ -323,116 +341,188 @@ noremap <Leader>s :update<CR>
 "switch between header/source with Ctr+2
 map <C-2> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,.hh,.cc,:s,.X123X$,.cpp,<CR>
 
-"elimination delays on ESC in vim and zsh
-set timeoutlen=1000 ttimeoutlen=0
+let g:syntastic_cpp_compiler_options = "-std=c++17"
+"   YCM
+" http://stackoverflow.com/questions/3105307/how-do-you-automatically-remove-the-preview-window-after-autocompletion-in-vim
+" :h ins-completion.
+" :YcmDiags - errors
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+let g:ycm_error_symbol = '●'
+let g:ycm_warning_symbol = '.'
+nnoremap <Leader>yj :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <Leader>yg :YcmCompleter GoTo<CR>
+nnoremap <Leader>yi :YcmCompleter GoToImplementationElseDeclaration<CR>
+nnoremap <Leader>yt :YcmCompleter GetTypeImprecise<CR>
+nnoremap <Leader>yd :YcmCompleter GetDoc<CR>
+nnoremap <Leader>yf :YcmCompleter FixIt<CR>
+nnoremap <Leader>yr :YcmCompleter GoToReferences<CR>
+nnoremap <Leader>el :YcmDiags<CR>
+nnoremap <Leader>yD ::YcmForceCompileAndDiagnostics<CR>
+nnoremap <Leader>yR :YcmRestartServer<CR>
+nnoremap <F12> :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <F10> :YcmCompleter GetTypeImprecise<CR>
+nnoremap <F9> :YcmCompleter GetDocImprecise<CR>
+"nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
+" ----------------------------------------------------------------------------
+" general stuff
+" ----------------------------------------------------------------------------
+" check file change every 4 seconds ('CursorHold') and reload the buffer upon
+" detecting change
+set autoread
+au CursorHold * checktime
 
-function! ProseMode()
-  call goyo#execute(0, [])
-  set spell noci nosi noai nolist noshowmode noshowcmd
-  set complete+=s
-  set bg=light
-  if !has('gui_running')
-    let g:solarized_termcolors=256
+"Advanced
+set undolevels=1000 "Number of undo levels
+set backspace=indent,eol,start  "Backspace behaviour
+
+augroup filetypedetect
+    au BufRead,BufNewFile *.log set filetype=log
+    au BufReadPost,BufNewFile *.compositor set ft=compositor
+    au BufReadPost,BufNewFile *.material set ft=material
+    au BufReadPost,BufNewFile *.glsl,*.cg set ft=glsl
+    au BufReadPost,BufNewFile content.txt set ft=fitnesse
+    au BufReadPost,BufNewFile database.txt,*.conf set ft=conf
+    au BufReadPost,BufNewFile config.in set ft=kconfig
+    au BufReadPost,BufNewFile *.xml set tabstop=4
+    au BufReadPost,BufNewFile *.crt set ft=crt
+augroup END
+
+"folding
+
+set foldenable          " enable folding
+set foldlevelstart=10   " open most folds by default
+set foldnestmax=10      " 10 nested fold max
+nnoremap <space> za
+nnoremap z<space> zA
+set foldmethod=indent   " fold based on indent level
+
+"save with root
+command! Wroot :execute ':silent w !sudo tee % > /dev/null' | :edit!
+
+" airline
+let g:airline_mode_map = {
+  \ '__' : '-',
+  \ 'n'  : 'N',
+  \ 'i'  : 'I',
+  \ 'R'  : 'R',
+  \ 'c'  : 'C',
+  \ 'v'  : 'V',
+  \ 'V'  : 'V',
+  \ '' : 'V',
+  \ 's'  : 'S',
+  \ 'S'  : 'S',
+  \ '' : 'S',
+  \ }
+let g:airline#extensions#default#section_truncate_width = {
+  \ 'b': 79,
+  \ 'x': 60,
+  \ 'y': 88,
+  \ 'z': 60,
+  \ 'warning': 80,
+  \ 'error': 80,
+  \ }
+let w:airline_skip_empty_sections = 1
+" let g:airline_section_b=' %{fugitive#head()}'
+let g:airline#extensions#hunks#enabled = 0
+let g:airline#extensions#wordcount#enabled = 0
+let g:airline_section_z='☰ %l/%L:%c'
+let g:airline#extensions#branch#format = 2
+set laststatus=2
+
+ let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+
+" -----------------------------------------------------------------------------
+" Fix autocompletions
+function! g:UltiSnips_Complete()
+  call UltiSnips#ExpandSnippet()
+  if g:ulti_expand_res == 0
+    if pumvisible()
+      return "\<C-n>"
+    else
+      call UltiSnips#JumpForwards()
+      if g:ulti_jump_forwards_res == 0
+        return "\<TAB>"
+      endif
+    endif
   endif
-  colors solarized
+  return ""
 endfunction
 
-command! ProseMode call ProseMode()
-nmap \p :ProseMode<CR>
-
-" Make sure colored syntax mode is on, and make it Just Work with 256-color terminals.
-" ----------------------------------------------------------------------------
-" COLORS
-" ----------------------------------------------------------------------------
-
-" Make sure colored syntax mode is on, and make it Just Work with 256-color terminals.
-set background=dark
-colorscheme gruvbox
-"colorscheme molokai
-let g:rehash256 = 1 " Something to do with Molokai?
-"colorscheme molokai
-if !has('gui_running')
-  if $TERM == "xterm-256color" || $TERM == "screen-256color" || $COLORTERM == "gnome-terminal"
-    set t_Co=256
-  elseif has("terminfo")
-    colorscheme default
-    set t_Co=8
-    set t_Sf=[3%p1%dm
-    set t_Sb=[4%p1%dm
-  else
-    colorscheme default
-    set t_Co=8
-    set t_Sf=[3%dm
-    set t_Sb=[4%dm
+function! g:UltiSnips_Reverse()
+  call UltiSnips#JumpBackwards()
+  if g:ulti_jump_backwards_res == 0
+    return "\<C-P>"
   endif
-  " Disable Background Color Erase when within tmux - https://stackoverflow.com/q/6427650/102704
-  if $TMUX != ""
-    set t_ut=
-  endif
+
+  return ""
+endfunction
+
+
+if !exists("g:UltiSnipsJumpForwardTrigger")
+  let g:UltiSnipsJumpForwardTrigger = "<tab>"
 endif
-syntax on
 
-" Window splits & ruler are too bright, so change to white on grey (non-GUI)
-highlight StatusLine       cterm=NONE ctermbg=blue ctermfg=white
-highlight StatusLineTerm   cterm=NONE ctermbg=blue ctermfg=white
-highlight StatusLineNC     cterm=NONE ctermbg=black ctermfg=white
-highlight StatusLineTermNC cterm=NONE ctermbg=black ctermfg=white
-highlight VertSplit        cterm=NONE ctermbg=black ctermfg=white
+if !exists("g:UltiSnipsJumpBackwardTrigger")
+  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+endif
 
-" taglist.vim's filenames is linked to LineNr by default, which is too dark
-highlight def link MyTagListFileName Statement
-highlight def link MyTagListTagName Question
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
+au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
-" Turn off horrible coloring for CDATA in XML
-highlight def link xmlCdata NONE
+inoremap <silent><C-X><C-U> <C-R>=g:UltiSnips_Complete()<CR>
 
-" Some custom spell-checking colors
-highlight SpellBad     term=underline cterm=underline ctermbg=NONE ctermfg=205
-highlight SpellCap     term=underline cterm=underline ctermbg=NONE ctermfg=33
-highlight SpellRare    term=underline cterm=underline ctermbg=NONE ctermfg=217
-highlight SpellLocal   term=underline cterm=underline ctermbg=NONE ctermfg=72
+" -----------------------------------------------------------------------------
+" execute macro on visal range
+"xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 
-" The Ignore color should be... ignorable
-silent! highlight Ignore cterm=bold ctermfg=black ctermbg=bg
-highlight clear FoldColumn
-highlight def link FoldColumn Ignore
-highlight clear Folded
-highlight link Folded Ignore
-highlight clear LineNr
-highlight! def link LineNr Ignore
+" function! ExecuteMacroOverVisualRange()
+"   echo "@".getcmdline()
+"   execute ":'<,'>normal @".nr2char(getchar())
+" endfunction
+"
+" -----------------------------------------------------------------------------
+" Make the dot command work as expected in visual mode (via
+" https://www.reddit.com/r/vim/comments/3y2mgt/do_you_have_any_minor_customizationsmappings_that/cya0x04)
+vnoremap . :norm.<CR>
 
-" Custom search colors
-highlight clear Search
-highlight Search term=NONE cterm=NONE ctermfg=white ctermbg=black
+" -----------------------------------------------------------------------------
+" Save temporary/backup files not in the local directory, but in your ~/.vim
+" directory, to keep them out of git repos.
+" But first mkdir backup, swap, and undo first to make this work
+call system('mkdir ~/.vim')
+call system('mkdir ~/.vim/backup')
+call system('mkdir ~/.vim/swap')
+set backupdir=~/.vim/backup//
+set directory=~/.vim/swap//
 
-" Make hilighted matching parents less annoying
-highlight clear MatchParen
-highlight link MatchParen Search
+" Keep undo history across sessions by storing it in a file
+if has('persistent_undo')
+    call system('mkdir ~/.vim/undo')
+    set undodir=~/.vim/undo//
+    set undofile
+    set undolevels=1000
+    set undoreload=10000
+endif
 
-" Custom colors for NERDTree
-highlight def link NERDTreeRO NERDTreeFile
+" easymotion
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+" nmap <Leader>w <Plug>(easymotion-w)
 
-" Make trailing spaces very visible
-"highlight SpecialKey ctermbg=dark guibg=dark
+" Bi-directional find motion
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+" `s{char}{label}`
+"nmap s <Plug>(easymotion-s)
+" or
+" `s{char}{char}{label}`
+" Need one more keystroke, but on average, it may be more comfortable.
+nmap ss <Plug>(easymotion-s2)
 
-" Make menu selections visible
-highlight PmenuSel ctermfg=black ctermbg=magenta
+" Turn on case insensitive feature
+let g:EasyMotion_smartcase = 1
 
-" The sign column slows down remote terminals
-highlight clear SignColumn
-highlight link SignColumn Ignore
+vnoremap <leader>j :m '>+1<CR>gv=gv
+vnoremap <leader>k :m '<-2<CR>gv=gv
 
-" Markdown could be more fruit salady
-highlight link markdownH1 PreProc
-highlight link markdownH2 PreProc
-highlight link markdownLink Character
-highlight link markdownBold String
-highlight link markdownItalic Statement
-highlight link markdownCode Delimiter
-highlight link markdownCodeBlock Delimiter
-highlight link markdownListMarker Todo
 
-"ale config
-let g:ale_sign_error = '●' "Less aggressive than the default '>>'
-let g:ale_sign_warning = '.'
-let g:ale_lint_on_enter = 0 "Less dsitracting when opening new file

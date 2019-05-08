@@ -9,17 +9,16 @@ import re
 BASE_FLAGS = [  
         '-Wall',
         '-Wextra',
-        '-Werror',
         '-Wno-long-long',
         '-Wno-variadic-macros',
         '-fexceptions',
         '-ferror-limit=10000',
         '-DNDEBUG',
-        '-std=c++14',
+        '-std=c++17',
         '-xc++',
+        '-I/usr/include/c++/8.3.0/',
         '-I/usr/lib/',
-        '-I/usr/include/',
-        '-I/usr/include/c++/6/'
+        '-I/usr/include/'
         ]
 
 SOURCE_EXTENSIONS = [  
