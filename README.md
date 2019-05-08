@@ -38,8 +38,6 @@ Do not add anything to your dotfiles if you do not understand what it does.
 - <Leader> wd - close current window
 - <Leader> pt - toggle nerd tree
 - <Leader> el - show youcompleteme diagnostic ( errors/warrning )
-- +           - increment nummbers
-- -           - decrement numbers
 - ga          - easy align
 - <Leader> 1  - switch to railscast theme
 - <Leader> 2  - switch to molokai theme
@@ -54,6 +52,6 @@ Do not add anything to your dotfiles if you do not understand what it does.
 
 #### Some screenshots
 
-![Screenshot 1!](https://imgur.com/3slv6Mx)
-![Screenshot 2!](https://imgur.com/DfQAtRp)
+![Screenshot 1](https://imgur.com/3slv6Mx.png)
+![Screenshot 2](https://imgur.com/DfQAtRp.png)
 
