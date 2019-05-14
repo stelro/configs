@@ -6,7 +6,7 @@
 "
 " Stel's .vimrc file
 "
-" Last Update: 08/05/2019
+" Last Update: 14/05/2019
 " stelmach.ro[at]gmail.com
 "
 set nocompatible              " be iMproved, required
@@ -50,6 +50,7 @@ Plugin 'vim-scripts/argtextobj.vim'
 Plugin 'kana/vim-operator-user'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'christoomey/vim-sort-motion'
+Plugin 'tikhomirov/vim-glsl'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown' 
@@ -69,10 +70,10 @@ Plugin 'gikmx/ctrlp-obsession'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 " Snippets
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'kracejic/snippetinabox.vim'
-Plugin 'scrooloose/syntastic'
+"Plugin 'SirVer/ultisnips'
+"Plugin 'honza/vim-snippets'
+"Plugin 'kracejic/snippetinabox.vim'
+"Plugin 'scrooloose/syntastic'
 Plugin 'majutsushi/tagbar'
 Plugin 'joereynolds/gtags-scope'
 " :Search :SearchBuffers :SearchReset :SearchBuffersReset
@@ -88,6 +89,7 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'chriskempson/base16-vim'
 Plugin 'jnurmine/zenburn'
 Plugin 'kracejic/themeinabox.vim'
+Plugin 'w0rp/ale'
 
 let g:colorizer_startup = 0
 
@@ -153,6 +155,9 @@ set cscopetag
 command! Ctagsgenerate :!ctags -R .
 command! Gtagsgenerate :!gtags
 
+" support glsl syntax highlighting
+autocmd! BufNewFile,BufRead *.vs,*.fs set ft=glsl
+
 " ----------------------------------------------------------------------------
 " ABBREVATIONS
 " ----------------------------------------------------------------------------
@@ -199,7 +204,6 @@ let g:ctrlp_custom_ignore = {
 " ----------------------------------------------------------------------------
 " KEY BINDING
 " ----------------------------------------------------------------------------
-
 nnoremap <Leader>f :GGFiles<cr>
 " nnoremap <C-p> :CtrlP<cr>
 nnoremap <Leader>. :BTags<cr>
@@ -306,9 +310,6 @@ augroup ClangFormatSettings
     " if you install vim-operator-user
     autocmd FileType c,cpp,cc,objc,java,javascript map <buffer><Leader>c <Plug>(operator-clang-format)
     autocmd FileType c,cpp,cc syntax clear cppSTLconstant
-
-    autocmd FileType vimwiki nmap <leader>tts :TaskWikiMod +sprint<CR>
-    autocmd FileType vimwiki nmap <leader>ttS :TaskWikiMod -sprint<CR>
 augroup END
 
 " Neoformat
@@ -320,13 +321,13 @@ vnoremap <Leader>cf :Neoformat<CR>
 autocmd FileType c,cpp,objc,java,javascript nnoremap <Leader>cc :.-1,.+1Neoformat<CR>
 
 "compile and run single source file without leaving vim
-autocmd filetype cpp nnoremap <leader>r :w <bar> exec '!g++ -std=c++17 -Wall -Wextra '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
-autocmd filetype c nnoremap <leader>r :w <bar> exec '!gcc -Wall '.shellescape('%').' -o top .shellescape('%:r').' && ./'.shellescape('%:r')<CR>
-autocmd filetype ruby nnoremap <leader>r :w <bar> exec '!ruby '.shellescape('%')<CR>
-autocmd filetype js nnoremap <leader>r :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
-autocmd filetype lua nnoremap <leader>r :w <bar> exec '!/usr/bin/lua5.3 '.shellescape('%')<CR>
-autocmd filetype jsx nnoremap <leader>r :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
-autocmd filetype javascript.jsx nnoremap <leader>r :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
+autocmd filetype cpp nnoremap <f8> :w <bar> exec '!g++ -std=c++17 -Wall -Wextra -g '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
+autocmd filetype c nnoremap <f8> :w <bar> exec '!gcc  -Wall -Wextra -g '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
+autocmd filetype ruby nnoremap <F8> :w <bar> exec '!ruby '.shellescape('%')<CR>
+autocmd filetype javascript nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
+autocmd filetype lua nnoremap <F8> :w <bar> exec '!/usr/bin/lua5.3 '.shellescape('%')<CR>
+autocmd filetype jsx nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
+autocmd filetype javascript.jsx nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
 
 "auto C/C++ header files guards
 function! s:insert_gates()
@@ -341,15 +342,20 @@ noremap <Leader>s :update<CR>
 "switch between header/source with Ctr+2
 map <C-2> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,.hh,.cc,:s,.X123X$,.cpp,<CR>
 
-let g:syntastic_cpp_compiler_options = "-std=c++17"
+set pastetoggle=<F2>
+
+"let g:syntastic_cpp_compiler_options = "-std=c++17"
 "   YCM
 " http://stackoverflow.com/questions/3105307/how-do-you-automatically-remove-the-preview-window-after-autocompletion-in-vim
 " :h ins-completion.
 " :YcmDiags - errors
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 let g:ycm_error_symbol = '●'
 let g:ycm_warning_symbol = '.'
+let g:ycm_enable_diagnostic_signs=0
 nnoremap <Leader>yj :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <Leader>yg :YcmCompleter GoTo<CR>
 nnoremap <Leader>yi :YcmCompleter GoToImplementationElseDeclaration<CR>
@@ -430,49 +436,49 @@ let g:airline_section_z='☰ %l/%L:%c'
 let g:airline#extensions#branch#format = 2
 set laststatus=2
 
- let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
 " -----------------------------------------------------------------------------
 " Fix autocompletions
-function! g:UltiSnips_Complete()
-  call UltiSnips#ExpandSnippet()
-  if g:ulti_expand_res == 0
-    if pumvisible()
-      return "\<C-n>"
-    else
-      call UltiSnips#JumpForwards()
-      if g:ulti_jump_forwards_res == 0
-        return "\<TAB>"
-      endif
-    endif
-  endif
-  return ""
-endfunction
-
-function! g:UltiSnips_Reverse()
-  call UltiSnips#JumpBackwards()
-  if g:ulti_jump_backwards_res == 0
-    return "\<C-P>"
-  endif
-
-  return ""
-endfunction
-
-
-if !exists("g:UltiSnipsJumpForwardTrigger")
-  let g:UltiSnipsJumpForwardTrigger = "<tab>"
-endif
-
-if !exists("g:UltiSnipsJumpBackwardTrigger")
-  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-endif
-
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
-au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
-
-inoremap <silent><C-X><C-U> <C-R>=g:UltiSnips_Complete()<CR>
-
+" function! g:UltiSnips_Complete()
+"   call UltiSnips#ExpandSnippet()
+"   if g:ulti_expand_res == 0
+"     if pumvisible()
+"       return "\<C-n>"
+"     else
+"       call UltiSnips#JumpForwards()
+"       if g:ulti_jump_forwards_res == 0
+"         return "\<TAB>"
+"       endif
+"     endif
+"   endif
+"   return ""
+" endfunction
+"
+" function! g:UltiSnips_Reverse()
+"   call UltiSnips#JumpBackwards()
+"   if g:ulti_jump_backwards_res == 0
+"     return "\<C-P>"
+"   endif
+"
+"   return ""
+" endfunction
+"
+"
+" if !exists("g:UltiSnipsJumpForwardTrigger")
+"   let g:UltiSnipsJumpForwardTrigger = "<tab>"
+" endif
+"
+" if !exists("g:UltiSnipsJumpBackwardTrigger")
+"   let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+" endif
+"
+" au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
+" au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+"
+" inoremap <silent><C-X><C-U> <C-R>=g:UltiSnips_Complete()<CR>
+"
 " -----------------------------------------------------------------------------
 " execute macro on visal range
 "xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
@@ -525,4 +531,8 @@ let g:EasyMotion_smartcase = 1
 vnoremap <leader>j :m '>+1<CR>gv=gv
 vnoremap <leader>k :m '<-2<CR>gv=gv
 
+"ale config
+let g:ale_sign_error = '●' "Less aggressive than the default '>>'
+let g:ale_sign_warning = '.'
+let g:ale_lint_on_enter = 0 "Less dsitracting when opening new file
 
