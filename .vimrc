@@ -48,6 +48,7 @@ Plugin 'scrooloose/nerdTree'
 Plugin 'vim-scripts/argtextobj.vim'
 " User defined operators/actions
 Plugin 'kana/vim-operator-user'
+Plugin 'vimwiki/vimwiki'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'christoomey/vim-sort-motion'
 Plugin 'tikhomirov/vim-glsl'
@@ -82,14 +83,16 @@ Plugin 'vim-scripts/visual-increment'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'wakatime/vim-wakatime'
 "Themes
-Plugin 'tomasr/molokai'
 Plugin 'jpo/vim-railscasts-theme'
 Plugin 'morhetz/gruvbox'
 Plugin 'altercation/vim-colors-solarized'
-Plugin 'chriskempson/base16-vim'
-Plugin 'jnurmine/zenburn'
-Plugin 'kracejic/themeinabox.vim'
-Plugin 'w0rp/ale'
+Plugin 'nanotech/jellybeans.vim'
+Plugin 'joshdick/onedark.vim'
+Plugin 'dracula/vim'
+Plugin 'liuchengxu/space-vim-dark'
+
+"Plugin 'kracejic/themeinabox.vim'
+"Plugin 'w0rp/ale'
 
 let g:colorizer_startup = 0
 
@@ -105,7 +108,8 @@ filetype plugin on
 syntax on
 let mapleader = " "         "set leader key to comma
 set number  "Show line numbers
-set relativenumber
+"set relativenumber
+
 nmap <leader>num :set nu! <CR>:set rnu!<CR>
 set wrap  "enable wraping
 set linebreak   "Break lines at word (requires Wrap lines)
@@ -254,8 +258,14 @@ set splitright    " more natural split opening
 nnoremap <Leader>w/ :vsplit<CR>
 nnoremap <Leader>wd :hide<CR>
 nnoremap <Leader>wl <C-w><C-w>
-
+"nerdtree
 nnoremap <Leader>pt :NERDTreeToggle<CR>
+
+" vimwiki
+command! WTable :VimwikiTable
+command! WToc :VimwikiTOC
+command! WTags :VimwikiRebuildTags
+
 
 "strip whitespace
 nnoremap <leader>sw :%s/\s\+$//<cr>:let @/=''<CR>
@@ -271,20 +281,27 @@ nmap ga <Plug>(EasyAlign)
 nmap <leader>dd :s/\(^.*$\)/\1\r\1/<CR>:noh<CR>
 xmap <leader>dd :'<,'>s/\(.*\)/\1\r\1/<CR>:noh<CR>
 
-
 " ----------------------------------------------------------------------------
 " THEMES STUFF
 " ----------------------------------------------------------------------------
+let g:dracula_colorterm = 0 
+let g:space_vim_dark_background = 234
+set termguicolors
+hi LineNr ctermbg=NONE guibg=NONE
+
 set background=dark
 nnoremap <leader>1 :colorscheme railscasts<cr>:AirlineTheme dark<cr>
-nnoremap <leader>2 :colorscheme molokai<cr>:AirlineTheme base16_monokai<cr>
-nnoremap <leader>3 :colorscheme themeinabox<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>4 :colorscheme themeinabox-light<cr>:AirlineTheme sol<cr>
-nnoremap <leader>5 :colorscheme themeinabox-transparent<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>6 :colorscheme gruvbox<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>7 :colorscheme zenburn<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>2 :colorscheme dracula<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>3 :colorscheme gruvbox<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>4 :colorscheme solarized<cr>:AirlineTheme solarized<cr>
+nnoremap <leader>5 :colorscheme onedark<cr>:AirlineTheme bubblegum<cr>
+nnoremap <leader>6 :colorscheme jellybeans<cr>:AirlineTheme jellybeans<cr>
+nnoremap <leader>7 :colorscheme space-vim-dark<cr>:AirlineTheme deus<cr>
 
-colorscheme themeinabox
+
+
+"colorscheme themeinabox
+colorscheme railscasts
 let g:airline_theme='base16_eighties'
 
 " ----------------------------------------------------------------------------
@@ -310,6 +327,8 @@ augroup ClangFormatSettings
     " if you install vim-operator-user
     autocmd FileType c,cpp,cc,objc,java,javascript map <buffer><Leader>c <Plug>(operator-clang-format)
     autocmd FileType c,cpp,cc syntax clear cppSTLconstant
+    autocmd FileType vimwiki nmap <leader>tts :TaskWikiMod +sprint<CR>
+    autocmd FileType vimwiki nmap <leader>ttS :TaskWikiMod -sprint<CR>
 augroup END
 
 " Neoformat
@@ -396,13 +415,13 @@ augroup END
 
 "folding
 
-set foldenable          " enable folding
-set foldlevelstart=10   " open most folds by default
-set foldnestmax=10      " 10 nested fold max
-nnoremap <space> za
-nnoremap z<space> zA
-set foldmethod=indent   " fold based on indent level
-
+" set foldenable          " enable folding
+" set foldlevelstart=10   " open most folds by default
+" set foldnestmax=10      " 10 nested fold max
+" nnoremap <space> za
+" nnoremap z<space> zA
+" set foldmethod=indent   " fold based on indent level
+"
 "save with root
 command! Wroot :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
@@ -447,7 +466,7 @@ let g:airline#extensions#tabline#enabled = 1
 "     if pumvisible()
 "       return "\<C-n>"
 "     else
-"       call UltiSnips#JumpForwards()
+"       call UltiSnips#JumpForwards()/
 "       if g:ulti_jump_forwards_res == 0
 "         return "\<TAB>"
 "       endif
@@ -535,4 +554,39 @@ vnoremap <leader>k :m '<-2<CR>gv=gv
 let g:ale_sign_error = '●' "Less aggressive than the default '>>'
 let g:ale_sign_warning = '.'
 let g:ale_lint_on_enter = 0 "Less dsitracting when opening new file
+
+" markdown ctags
+let g:tagbar_type_markdown = {
+    \ 'ctagstype' : 'vimwiki',
+    \ 'kinds' : [
+        \ 'h:Heading_L1',
+        \ 'i:Heading_L2',
+        \ 'k:Heading_L3'
+    \ ]
+\ }
+let g:tagbar_type_markdown = {
+    \ 'ctagstype' : 'markdown',
+    \ 'kinds' : [
+        \ 'h:Heading_L1',
+        \ 'i:Heading_L2',
+        \ 'k:Heading_L3'
+    \ ]
+\ }
+
+" -----------------------------------------------------------------------------
+" search for visually selected text
+vnoremap // y/<C-R>"<CR>
+
+" -----------------------------------------------------------------------------
+" Search for selected text, forwards or backwards.
+vnoremap <silent> * :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy/<C-R><C-R>=substitute(
+  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+vnoremap <silent> # :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy?<C-R><C-R>=substitute(
+  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
 
