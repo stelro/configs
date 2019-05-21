@@ -52,6 +52,7 @@ Plugin 'vimwiki/vimwiki'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'christoomey/vim-sort-motion'
 Plugin 'tikhomirov/vim-glsl'
+Plugin 'danro/rename.vim'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown' 
@@ -90,7 +91,6 @@ Plugin 'nanotech/jellybeans.vim'
 Plugin 'joshdick/onedark.vim'
 Plugin 'dracula/vim'
 Plugin 'liuchengxu/space-vim-dark'
-
 "Plugin 'kracejic/themeinabox.vim'
 "Plugin 'w0rp/ale'
 
@@ -107,7 +107,7 @@ filetype plugin on
 
 syntax on
 let mapleader = " "         "set leader key to comma
-set number  "Show line numbers
+"set number  "Show line numbers
 "set relativenumber
 
 nmap <leader>num :set nu! <CR>:set rnu!<CR>
@@ -158,6 +158,9 @@ set cscopetag
 
 command! Ctagsgenerate :!ctags -R .
 command! Gtagsgenerate :!gtags
+
+let g:gitgutter_max_signs=9999
+
 
 " support glsl syntax highlighting
 autocmd! BufNewFile,BufRead *.vs,*.fs set ft=glsl
@@ -219,6 +222,9 @@ nnoremap <Leader>bb :Buffers<CR>
 nnoremap <Leader>bd :bd <CR>
 nnoremap gt :bnext<CR>
 nnoremap tg :bprev<CR>
+
+"set line numbers
+nnoremap <Leader>ts :set invnumber<CR>
 
 " Git-fugitive stuff
 nmap <leader>g :Gstatus<cr>gg<C-n>
@@ -286,22 +292,27 @@ xmap <leader>dd :'<,'>s/\(.*\)/\1\r\1/<CR>:noh<CR>
 " ----------------------------------------------------------------------------
 let g:dracula_colorterm = 0 
 let g:space_vim_dark_background = 234
-set termguicolors
 hi LineNr ctermbg=NONE guibg=NONE
+
+" Enable true color 
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
 
 set background=dark
 nnoremap <leader>1 :colorscheme railscasts<cr>:AirlineTheme dark<cr>
-nnoremap <leader>2 :colorscheme dracula<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>3 :colorscheme gruvbox<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>4 :colorscheme solarized<cr>:AirlineTheme solarized<cr>
-nnoremap <leader>5 :colorscheme onedark<cr>:AirlineTheme bubblegum<cr>
-nnoremap <leader>6 :colorscheme jellybeans<cr>:AirlineTheme jellybeans<cr>
-nnoremap <leader>7 :colorscheme space-vim-dark<cr>:AirlineTheme deus<cr>
+nnoremap <leader>2 :colorscheme gruvbox<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>3 :colorscheme solarized<cr>:AirlineTheme solarized<cr>
+nnoremap <leader>4 :colorscheme space-vim-dark<cr>:AirlineTheme deus<cr>
+nnoremap <leader>5 :colorscheme themeinabox<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>6 :colorscheme themeinabox-light<cr>:AirlineTheme sol<cr>
+nnoremap <leader>7 :colorscheme themeinabox-transparent<cr>:AirlineTheme base16_eighties<cr>
 
 
-
-"colorscheme themeinabox
-colorscheme railscasts
+colorscheme themeinabox
+"colorscheme railscasts
 let g:airline_theme='base16_eighties'
 
 " ----------------------------------------------------------------------------
@@ -371,6 +382,21 @@ set pastetoggle=<F2>
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 let g:ycm_confirm_extra_conf = 0
+let g:ycm_auto_trigger=1
+let g:ycm_min_num_of_chars_for_completion=4
+let g:ycm_max_num_candidates = 10
+let g:ycm_semantic_triggers = {
+      \'c' : ['->', '    ', '.', ' ', '(', '[', '&'],
+      \'cpp,objcpp' : ['->', '.', ' ', '(', '[', '&', '::'],
+      \'perl' : ['->', '::', ' '],
+      \'php' : ['->', '::', '.'],
+      \'cs,java,javascript,d,vim,python,perl6,scala,vb,elixir,go' : ['.'],
+      \'ruby' : ['.', '::'],
+      \'lua' : ['.', ':'],
+      \'scss,css': [ 're!^\s{2,4}', 're!:\s+' ],
+      \'html': ['<', '"', '</', ' '],
+      \'javascript': ['.', 're!(?=[a-zA-Z]{3,4})'],
+      \}
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 let g:ycm_error_symbol = '●'
 let g:ycm_warning_symbol = '.'
