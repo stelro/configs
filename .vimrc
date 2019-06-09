@@ -152,6 +152,10 @@ command! Gtagsgenerate :!gtags
 
 let g:gitgutter_max_signs=9999
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 003c1806d53c876ca6011b1fa4b176011b10a5a1
 " support glsl syntax highlighting
 autocmd! BufNewFile,BufRead *.vs,*.fs set ft=glsl
 
@@ -203,10 +207,13 @@ nnoremap <Leader>bd :bd <CR>
 nnoremap gt :bnext<CR>
 nnoremap tg :bprev<CR>
 
+<<<<<<< HEAD
 
 "save current buffer
 nnoremap <leader>w :w<cr>
 
+=======
+>>>>>>> 003c1806d53c876ca6011b1fa4b176011b10a5a1
 "set line numbers
 nnoremap <Leader>ts :set invnumber<CR>
 
@@ -256,6 +263,10 @@ command! WTable :VimwikiTable
 command! WToc :VimwikiTOC
 command! WTags :VimwikiRebuildTags
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 003c1806d53c876ca6011b1fa4b176011b10a5a1
 "strip whitespace
 nnoremap <leader>sw :%s/\s\+$//<cr>:let @/=''<CR>
 command! Stripwhitespace :%s/\s\+$//
@@ -273,6 +284,7 @@ xmap <leader>dd :'<,'>s/\(.*\)/\1\r\1/<CR>:noh<CR>
 " ----------------------------------------------------------------------------
 " THEMES STUFF
 " ----------------------------------------------------------------------------
+<<<<<<< HEAD
 " let g:dracula_colorterm = 0 
 " let g:space_vim_dark_background = 234
 " hi LineNr ctermbg=NONE guibg=NONE
@@ -288,6 +300,27 @@ set background=dark
 nnoremap <leader>1 :colorscheme themeinabox<cr>:AirlineTheme base16_eighties<cr>
 nnoremap <leader>2 :colorscheme badwolf<cr>:AirlineTheme badwolf<cr>
 nnoremap <leader>3 :colorscheme themeinabox-transparent<cr>:AirlineTheme base16_eighties<cr>
+=======
+let g:dracula_colorterm = 0 
+let g:space_vim_dark_background = 234
+hi LineNr ctermbg=NONE guibg=NONE
+
+" Enable true color 
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
+set background=dark
+nnoremap <leader>1 :colorscheme railscasts<cr>:AirlineTheme dark<cr>
+nnoremap <leader>2 :colorscheme gruvbox<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>3 :colorscheme solarized<cr>:AirlineTheme solarized<cr>
+nnoremap <leader>4 :colorscheme space-vim-dark<cr>:AirlineTheme deus<cr>
+nnoremap <leader>5 :colorscheme themeinabox<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>6 :colorscheme themeinabox-light<cr>:AirlineTheme sol<cr>
+nnoremap <leader>7 :colorscheme themeinabox-transparent<cr>:AirlineTheme base16_eighties<cr>
+>>>>>>> 003c1806d53c876ca6011b1fa4b176011b10a5a1
 
 
 colorscheme themeinabox
@@ -377,7 +410,11 @@ autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_auto_trigger=1
+<<<<<<< HEAD
 let g:ycm_min_num_of_chars_for_completion=6
+=======
+let g:ycm_min_num_of_chars_for_completion=4
+>>>>>>> 003c1806d53c876ca6011b1fa4b176011b10a5a1
 let g:ycm_max_num_candidates = 10
 let g:ycm_semantic_triggers = {
       \'c' : ['->', '    ', '.', ' ', '(', '[', '&'],
@@ -479,6 +516,58 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
 " -----------------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+" Fix autocompletions
+" function! g:UltiSnips_Complete()
+"   call UltiSnips#ExpandSnippet()
+"   if g:ulti_expand_res == 0
+"     if pumvisible()
+"       return "\<C-n>"
+"     else
+"       call UltiSnips#JumpForwards()/
+"       if g:ulti_jump_forwards_res == 0
+"         return "\<TAB>"
+"       endif
+"     endif
+"   endif
+"   return ""
+" endfunction
+"
+" function! g:UltiSnips_Reverse()
+"   call UltiSnips#JumpBackwards()
+"   if g:ulti_jump_backwards_res == 0
+"     return "\<C-P>"
+"   endif
+"
+"   return ""
+" endfunction
+"
+"
+" if !exists("g:UltiSnipsJumpForwardTrigger")
+"   let g:UltiSnipsJumpForwardTrigger = "<tab>"
+" endif
+"
+" if !exists("g:UltiSnipsJumpBackwardTrigger")
+"   let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+" endif
+"
+" au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
+" au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+"
+" inoremap <silent><C-X><C-U> <C-R>=g:UltiSnips_Complete()<CR>
+"
+" -----------------------------------------------------------------------------
+" execute macro on visal range
+"xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+
+" function! ExecuteMacroOverVisualRange()
+"   echo "@".getcmdline()
+"   execute ":'<,'>normal @".nr2char(getchar())
+" endfunction
+"
+" -----------------------------------------------------------------------------
+>>>>>>> 003c1806d53c876ca6011b1fa4b176011b10a5a1
 " Make the dot command work as expected in visual mode (via
 " https://www.reddit.com/r/vim/comments/3y2mgt/do_you_have_any_minor_customizationsmappings_that/cya0x04)
 vnoremap . :norm.<CR>
@@ -561,6 +650,7 @@ vnoremap <silent> # :<C-U>
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
+<<<<<<< HEAD
 " ----------------------------------------------------------------------------
 " Building Projects
 " ----------------------------------------------------------------------------
@@ -611,3 +701,5 @@ if isdirectory("build")
     nmap <leader>bf :call BuildCMakeProjectShort("format", "build")<CR>
 endif
 
+=======
+>>>>>>> 003c1806d53c876ca6011b1fa4b176011b10a5a1
