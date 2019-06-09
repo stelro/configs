@@ -6,7 +6,7 @@
 "
 " Stel's .vimrc file
 "
-" Last Update: 14/05/2019
+" Last Update: 08/06/2019
 " stelmach.ro[at]gmail.com
 "
 set nocompatible              " be iMproved, required
@@ -43,14 +43,15 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'terryma/vim-multiple-cursors'
-Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdTree'
 Plugin 'vim-scripts/argtextobj.vim'
 " User defined operators/actions
 Plugin 'kana/vim-operator-user'
+Plugin 'vimwiki/vimwiki'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'christoomey/vim-sort-motion'
 Plugin 'tikhomirov/vim-glsl'
+Plugin 'danro/rename.vim'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown' 
@@ -82,14 +83,7 @@ Plugin 'vim-scripts/visual-increment'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'wakatime/vim-wakatime'
 "Themes
-Plugin 'tomasr/molokai'
-Plugin 'jpo/vim-railscasts-theme'
-Plugin 'morhetz/gruvbox'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'chriskempson/base16-vim'
-Plugin 'jnurmine/zenburn'
-Plugin 'kracejic/themeinabox.vim'
-Plugin 'w0rp/ale'
+"Plugin 'w0rp/ale'
 
 let g:colorizer_startup = 0
 
@@ -104,8 +98,9 @@ filetype plugin on
 
 syntax on
 let mapleader = " "         "set leader key to comma
-set number  "Show line numbers
-set relativenumber
+"set number  "Show line numbers
+"set relativenumber
+
 nmap <leader>num :set nu! <CR>:set rnu!<CR>
 set wrap  "enable wraping
 set linebreak   "Break lines at word (requires Wrap lines)
@@ -141,7 +136,7 @@ set nobackup            " no backup~ files.
 set viminfo='20,\"500   " remember copy registers after quitting in the .viminfo file -- 20 jump links, regs up to 500 lines'
 set textwidth=100           " 100 is the new 80
 set hidden              " remember undo after quitting
-set history=150          " keep 50 lines of command history
+set history=150          " keep 150 lines of command history
 set mouse=v             " use mouse in visual mode (not normal,insert,command,help mode
 set t_ut=
 set previewheight=7
@@ -154,6 +149,8 @@ set cscopetag
 
 command! Ctagsgenerate :!ctags -R .
 command! Gtagsgenerate :!gtags
+
+let g:gitgutter_max_signs=9999
 
 " support glsl syntax highlighting
 autocmd! BufNewFile,BufRead *.vs,*.fs set ft=glsl
@@ -177,29 +174,19 @@ command! Wq wq
 " ----------------------------------------------------------------------------
 " SEARCHING
 " ----------------------------------------------------------------------------
-"let g:ctrlp_map = '<leader>f'
-let g:ctrlp_max_height = 8
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_match_window_reversed = 0
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|(build|cmake-build-debug|external|build-release|bin)$',
-  \ 'file': '\v\.(exe|so|dll)$',
-  \ 'link': 'some_bad_symbolic_links',
-  \ }
+" Default fzf layout
+" - down / up / left / right
+let g:fzf_layout = { 'down': '~30%' }
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+" [[B]Commits] Customize the options used by 'git log':
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+" [Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R'
+" [Commands] --expect expression for directly executing the command
+let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 
- " Default fzf layout
-    " - down / up / left / right
-    let g:fzf_layout = { 'down': '~30%' }
-    " [Buffers] Jump to the existing window if possible
-    let g:fzf_buffers_jump = 1
-    " [[B]Commits] Customize the options used by 'git log':
-    let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
-    " [Tags] Command to generate tags file
-    let g:fzf_tags_command = 'ctags -R'
-    " [Commands] --expect expression for directly executing the command
-    let g:fzf_commands_expect = 'alt-enter,ctrl-x'
-
-    command! GGFiles call fzf#run(fzf#wrap({'source': 'if [ -d .git ] ; then git ls-files -co --exclude-standard ; elif [ -d .hg ] ; then hg locate ; else  find . ; fi', 'sink': 'e'}))
+command! GGFiles call fzf#run(fzf#wrap({'source': 'if [ -d .git ] ; then git ls-files -co --exclude-standard ; elif [ -d .hg ] ; then hg locate ; else  find . ; fi', 'sink': 'e'}))
 
 " ----------------------------------------------------------------------------
 " KEY BINDING
@@ -215,6 +202,13 @@ nnoremap <Leader>bb :Buffers<CR>
 nnoremap <Leader>bd :bd <CR>
 nnoremap gt :bnext<CR>
 nnoremap tg :bprev<CR>
+
+
+"save current buffer
+nnoremap <leader>w :w<cr>
+
+"set line numbers
+nnoremap <Leader>ts :set invnumber<CR>
 
 " Git-fugitive stuff
 nmap <leader>g :Gstatus<cr>gg<C-n>
@@ -254,8 +248,13 @@ set splitright    " more natural split opening
 nnoremap <Leader>w/ :vsplit<CR>
 nnoremap <Leader>wd :hide<CR>
 nnoremap <Leader>wl <C-w><C-w>
-
+"nerdtree
 nnoremap <Leader>pt :NERDTreeToggle<CR>
+
+" vimwiki
+command! WTable :VimwikiTable
+command! WToc :VimwikiTOC
+command! WTags :VimwikiRebuildTags
 
 "strip whitespace
 nnoremap <leader>sw :%s/\s\+$//<cr>:let @/=''<CR>
@@ -271,20 +270,28 @@ nmap ga <Plug>(EasyAlign)
 nmap <leader>dd :s/\(^.*$\)/\1\r\1/<CR>:noh<CR>
 xmap <leader>dd :'<,'>s/\(.*\)/\1\r\1/<CR>:noh<CR>
 
-
 " ----------------------------------------------------------------------------
 " THEMES STUFF
 " ----------------------------------------------------------------------------
+" let g:dracula_colorterm = 0 
+" let g:space_vim_dark_background = 234
+" hi LineNr ctermbg=NONE guibg=NONE
+"
+" " Enable true color 
+" if exists('+termguicolors')
+"   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+"   set termguicolors
+" endif
+
 set background=dark
-nnoremap <leader>1 :colorscheme railscasts<cr>:AirlineTheme dark<cr>
-nnoremap <leader>2 :colorscheme molokai<cr>:AirlineTheme base16_monokai<cr>
-nnoremap <leader>3 :colorscheme themeinabox<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>4 :colorscheme themeinabox-light<cr>:AirlineTheme sol<cr>
-nnoremap <leader>5 :colorscheme themeinabox-transparent<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>6 :colorscheme gruvbox<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>7 :colorscheme zenburn<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>1 :colorscheme themeinabox<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>2 :colorscheme badwolf<cr>:AirlineTheme badwolf<cr>
+nnoremap <leader>3 :colorscheme themeinabox-transparent<cr>:AirlineTheme base16_eighties<cr>
+
 
 colorscheme themeinabox
+"colorscheme railscasts
 let g:airline_theme='base16_eighties'
 
 " ----------------------------------------------------------------------------
@@ -296,27 +303,44 @@ let g:clang_format#code_style = "llvm"
 let g:clang_format#style_options = {
       \ "AllowShortFunctionsOnASingleLine": "Empty",
       \ "AlwaysBreakTemplateDeclarations": "true",
-      \ "BreakBeforeBraces": "Allman",
+      \ "BreakBeforeBraces": "Custom",
       \ "BreakConstructorInitializersBeforeComma": "true",
       \ "IndentCaseLabels": "true",
       \ "IndentWidth":     2,
       \ "MaxEmptyLinesToKeep": 2,
-      \ "NamespaceIndentation": "Inner",
+      \ "NamespaceIndentation": "All",
+      \ "BraceWrapping": {
+      \   "AfterEnum": "true",
+      \   "AfterStruct": "false",
+      \   "AfterControlStatement": "false",
+      \   "AfterFunction": "false",
+      \   "AfterNamespace": "false",
+      \   "BeforeElse": "false"},
       \ "ObjCBlockIndentWidth": 2,
+      \ "SpaceBeforeCpp11BracedList": "true",
+      \ "SpaceBeforeRangeBasedForLoopColon": "true",
+      \ "SpacesBeforeTrailingComments": 4,
+      \ "SpacesInCStyleCastParentheses": "true",
+      \ "SpacesInContainerLiterals": "true",
+      \ "SpacesInParentheses": "true",
+      \ "SpacesInSquareBrackets": "true",
+      \ "AlignTrailingComments": "true",
       \ "TabWidth": 2}
 
 augroup ClangFormatSettings
     autocmd!
     " if you install vim-operator-user
-    autocmd FileType c,cpp,cc,objc,java,javascript map <buffer><Leader>c <Plug>(operator-clang-format)
+    autocmd FileType c,cpp,cc,objc,java,javascript,glsl map <buffer><Leader>c <Plug>(operator-clang-format)
     autocmd FileType c,cpp,cc syntax clear cppSTLconstant
+    autocmd FileType vimwiki nmap <leader>tts :TaskWikiMod +sprint<CR>
+    autocmd FileType vimwiki nmap <leader>ttS :TaskWikiMod -sprint<CR>
 augroup END
 
 " Neoformat
 let g:neoformat_enabled_python = ['autopep8']
 
-nnoremap <Leader>cf :Neoformat<CR>
-vnoremap <Leader>cf :Neoformat<CR>
+nnoremap <Leader>cf :ClangFormat<CR>
+vnoremap <Leader>cf :ClangFormat<CR>
 " format line +-1
 autocmd FileType c,cpp,objc,java,javascript nnoremap <Leader>cc :.-1,.+1Neoformat<CR>
 
@@ -352,6 +376,21 @@ set pastetoggle=<F2>
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 let g:ycm_confirm_extra_conf = 0
+let g:ycm_auto_trigger=1
+let g:ycm_min_num_of_chars_for_completion=6
+let g:ycm_max_num_candidates = 10
+let g:ycm_semantic_triggers = {
+      \'c' : ['->', '    ', '.', ' ', '(', '[', '&'],
+      \'cpp,objcpp' : ['->', '.', ' ', '(', '[', '&', '::'],
+      \'perl' : ['->', '::', ' '],
+      \'php' : ['->', '::', '.'],
+      \'cs,java,javascript,d,vim,python,perl6,scala,vb,elixir,go' : ['.'],
+      \'ruby' : ['.', '::'],
+      \'lua' : ['.', ':'],
+      \'scss,css': [ 're!^\s{2,4}', 're!:\s+' ],
+      \'html': ['<', '"', '</', ' '],
+      \'javascript': ['.', 're!(?=[a-zA-Z]{3,4})'],
+      \}
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 let g:ycm_error_symbol = '●'
 let g:ycm_warning_symbol = '.'
@@ -369,8 +408,8 @@ nnoremap <Leader>yR :YcmRestartServer<CR>
 nnoremap <F12> :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <F10> :YcmCompleter GetTypeImprecise<CR>
 nnoremap <F9> :YcmCompleter GetDocImprecise<CR>
-"nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
-" ----------------------------------------------------------------------------
+nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
+"----------------------------------------------------------------------------
 " general stuff
 " ----------------------------------------------------------------------------
 " check file change every 4 seconds ('CursorHold') and reload the buffer upon
@@ -396,13 +435,13 @@ augroup END
 
 "folding
 
-set foldenable          " enable folding
-set foldlevelstart=10   " open most folds by default
-set foldnestmax=10      " 10 nested fold max
-nnoremap <space> za
-nnoremap z<space> zA
-set foldmethod=indent   " fold based on indent level
-
+" set foldenable          " enable folding
+" set foldlevelstart=10   " open most folds by default
+" set foldnestmax=10      " 10 nested fold max
+" nnoremap <space> za
+" nnoremap z<space> zA
+" set foldmethod=indent   " fold based on indent level
+"
 "save with root
 command! Wroot :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
@@ -439,55 +478,6 @@ set laststatus=2
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
-" -----------------------------------------------------------------------------
-" Fix autocompletions
-" function! g:UltiSnips_Complete()
-"   call UltiSnips#ExpandSnippet()
-"   if g:ulti_expand_res == 0
-"     if pumvisible()
-"       return "\<C-n>"
-"     else
-"       call UltiSnips#JumpForwards()
-"       if g:ulti_jump_forwards_res == 0
-"         return "\<TAB>"
-"       endif
-"     endif
-"   endif
-"   return ""
-" endfunction
-"
-" function! g:UltiSnips_Reverse()
-"   call UltiSnips#JumpBackwards()
-"   if g:ulti_jump_backwards_res == 0
-"     return "\<C-P>"
-"   endif
-"
-"   return ""
-" endfunction
-"
-"
-" if !exists("g:UltiSnipsJumpForwardTrigger")
-"   let g:UltiSnipsJumpForwardTrigger = "<tab>"
-" endif
-"
-" if !exists("g:UltiSnipsJumpBackwardTrigger")
-"   let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-" endif
-"
-" au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
-" au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
-"
-" inoremap <silent><C-X><C-U> <C-R>=g:UltiSnips_Complete()<CR>
-"
-" -----------------------------------------------------------------------------
-" execute macro on visal range
-"xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
-
-" function! ExecuteMacroOverVisualRange()
-"   echo "@".getcmdline()
-"   execute ":'<,'>normal @".nr2char(getchar())
-" endfunction
-"
 " -----------------------------------------------------------------------------
 " Make the dot command work as expected in visual mode (via
 " https://www.reddit.com/r/vim/comments/3y2mgt/do_you_have_any_minor_customizationsmappings_that/cya0x04)
@@ -535,4 +525,89 @@ vnoremap <leader>k :m '<-2<CR>gv=gv
 let g:ale_sign_error = '●' "Less aggressive than the default '>>'
 let g:ale_sign_warning = '.'
 let g:ale_lint_on_enter = 0 "Less dsitracting when opening new file
+
+" markdown ctags
+let g:tagbar_type_markdown = {
+    \ 'ctagstype' : 'vimwiki',
+    \ 'kinds' : [
+        \ 'h:Heading_L1',
+        \ 'i:Heading_L2',
+        \ 'k:Heading_L3'
+    \ ]
+\ }
+let g:tagbar_type_markdown = {
+    \ 'ctagstype' : 'markdown',
+    \ 'kinds' : [
+        \ 'h:Heading_L1',
+        \ 'i:Heading_L2',
+        \ 'k:Heading_L3'
+    \ ]
+\ }
+
+" -----------------------------------------------------------------------------
+" search for visually selected text
+vnoremap // y/<C-R>"<CR>
+
+" -----------------------------------------------------------------------------
+" Search for selected text, forwards or backwards.
+vnoremap <silent> * :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy/<C-R><C-R>=substitute(
+  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+vnoremap <silent> # :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy?<C-R><C-R>=substitute(
+  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+
+" ----------------------------------------------------------------------------
+" Building Projects
+" ----------------------------------------------------------------------------
+
+" CMake support
+function! BuildCMakeProjectShort(target, dir)
+    echom a:target
+    if isdirectory(a:dir)
+        silent !clear
+        execute "! cd " . a:dir . " && clear && cmake --build . --target " . a:target . " -- -j" . (system('grep -c ^processor /proc/cpuinfo')+1) . " && echo '-- Build was OK'"
+    else
+        echo "build folder was not found, cannot build"
+    endif
+endfunction
+
+function! BuildCMakeProject(target, dir)
+    echom a:target
+    if isdirectory(a:dir)
+        let result = system( "cd " . a:dir . " && clear && cmake --build . --target " . a:target . " -- -j" . (system('grep -c ^processor /proc/cpuinfo')+1) . " 2>&1 && echo '-- Build was OK'")
+
+        split __Build_output__
+        normal! ggdG
+        setlocal filetype=krcppbuild
+        setlocal buftype=nofile
+        setlocal bufhidden=hide
+        setlocal nobuflisted
+
+        " Insert the bytecode.
+        call append(0, split(result, '\v\n'))
+        setlocal nonumber
+        setlocal norelativenumber
+        " setlocal nomodifiable
+
+        :map <buffer> q :bd<cr>
+    else
+        echo "build folder was not found, cannot build"
+    endif
+endfunction
+
+nmap <leader>bt :!tmux send-keys -t "build" Up Enter<CR><CR>
+
+if isdirectory("build")
+    nmap <leader>ba :call BuildCMakeProject("all", "build")<CR>
+    nmap <leader>bt :call BuildCMakeProject("catch", "build")<CR>
+    nmap <leader>be :call BuildCMakeProject("main.x", "build")<CR>
+    nmap <leader>br :call BuildCMakeProjectShort("run", "build")<CR>
+    nmap <leader>bc :call BuildCMakeProjectShort("clean", "build")<CR>
+    nmap <leader>bf :call BuildCMakeProjectShort("format", "build")<CR>
+endif
 
