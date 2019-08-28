@@ -283,17 +283,26 @@ if exists('+termguicolors')
   set termguicolors
 endif
 
+let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_experimental_template_highlight = 1
+let g:cpp_concepts_highlight = 1
+
+
 set background=dark
 nnoremap <leader>1 :colorscheme themeinabox<cr>:AirlineTheme base16_eighties<cr>
 nnoremap <leader>2 :colorscheme badwolf<cr>:AirlineTheme badwolf<cr>
 nnoremap <leader>3 :colorscheme themeinabox-transparent<cr>:AirlineTheme base16_eighties<cr>
 nnoremap <leader>4 :colorscheme happy_hacking<cr>:AirlineTheme base16_eighties<cr>
 nnoremap <leader>5 :colorscheme stelinabox<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>6 :colorscheme jaybeenight<cr>:AirlineTheme jaybee<cr>
 
 
 colorscheme stelinabox
 "colorscheme railscasts
 let g:airline_theme='base16_eighties'
+
 
 " ----------------------------------------------------------------------------
 " C++ Stuff
@@ -620,7 +629,7 @@ nmap <leader>bt :!tmux send-keys -t "build" Up Enter<CR><CR>
 function! RunAndShowImage(dir)
 
        if isdirectory(a:dir)
-        let result = system( "cd " . a:dir . " && ./main.x && feh image.jpg " )
+        let result = system( "cd " . a:dir . " && ./main && feh image.jpg " )
 
         split __Build_output__
         normal! ggdG
@@ -645,7 +654,7 @@ endfunction
 if isdirectory("build")
     nmap <leader>ba :call BuildCMakeProject("all", "build")<CR>
     nmap <leader>bt :call BuildCMakeProject("catch", "build")<CR>
-    nmap <leader>be :call BuildCMakeProject("main.x", "build")<CR>
+    nmap <leader>be :call BuildCMakeProject("main", "build")<CR>
     nmap <leader>br :call BuildCMakeProjectShort("run", "build")<CR>
     nmap <leader>bc :call BuildCMakeProjectShort("clean", "build")<CR>
     nmap <leader>bf :call BuildCMakeProjectShort("format", "build")<CR>
