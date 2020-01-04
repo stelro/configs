@@ -7,7 +7,7 @@
 "
 " Stel's .vimrc file
 "
-" Last Update: 21/06/2019
+" Last Update: 05/10/2019
 " stelmach.ro[at]gmail.com
 "
 set nocompatible              " be iMproved, required
@@ -38,6 +38,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'junegunn/gv.vim'
 " Sourdings, parantheses, brackes, quotes, XML Tags 
 " with cs"' to change from "" to ''
+"Plugin 'dense-analysis/ale'
 Plugin 'tpope/vim-surround'
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -56,6 +57,7 @@ Plugin 'danro/rename.vim'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown' 
+Plugin 'yuttie/comfortable-motion.vim'
 " better cooperation with tmux
 Plugin 'christoomey/vim-tmux-navigator'
 " gutter for marks
@@ -71,11 +73,6 @@ Plugin 'gikmx/ctrlp-obsession'
 " fast searching
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
-" Snippets
-"Plugin 'SirVer/ultisnips'
-"Plugin 'honza/vim-snippets'
-"Plugin 'kracejic/snippetinabox.vim'
-"Plugin 'scrooloose/syntastic'
 Plugin 'majutsushi/tagbar'
 Plugin 'joereynolds/gtags-scope'
 " :Search :SearchBuffers :SearchReset :SearchBuffersReset
@@ -83,6 +80,8 @@ Plugin 'vim-scripts/MultipleSearch'
 Plugin 'vim-scripts/visual-increment'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'wakatime/vim-wakatime'
+" Rust
+Plugin 'rust-lang/rust.vim'
 
 let g:colorizer_startup = 0
 
@@ -161,6 +160,8 @@ autocmd! BufNewFile,BufRead *.vs,*.fs set ft=glsl
 abbr conosle console
 abbr comopnent component
 abbr inlcude include
+abbr cosnt const
+
 " These are things that I mistype and want ignored.
 nmap Q  <silent>
 nmap q: <silent>
@@ -201,7 +202,8 @@ nnoremap <Leader>bb :Buffers<CR>
 nnoremap <Leader>bd :bd <CR>
 nnoremap gt :bnext<CR>
 nnoremap tg :bprev<CR>
-
+nnoremap <Leader>sc :set spell spelllang=en_us<CR>
+nnoremap <Leader>sd :set nospell<CR>
 
 "save current buffer
 nnoremap <leader>w :w<cr>
@@ -291,17 +293,19 @@ let g:cpp_concepts_highlight = 1
 
 
 set background=dark
-nnoremap <leader>1 :colorscheme themeinabox<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>2 :colorscheme badwolf<cr>:AirlineTheme badwolf<cr>
-nnoremap <leader>3 :colorscheme themeinabox-transparent<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>4 :colorscheme happy_hacking<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>5 :colorscheme stelinabox<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>6 :colorscheme jaybeenight<cr>:AirlineTheme jaybee<cr>
+nnoremap <leader>1 :colorscheme jaybeenight<cr>:AirlineTheme jaybee<cr>
+nnoremap <leader>2 :colorscheme stelinabox<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>3 :colorscheme themeinabox<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>4 :colorscheme themeinabox-transparent<cr>:AirlineTheme base16_eighties<cr>
+nnoremap <leader>5 :colorscheme xcode_dark<cr>:AirlineTheme deus<cr>
+nnoremap <leader>6 :colorscheme xcode<cr>:AirlineTheme sol<cr>
 
 
-colorscheme stelinabox
-"colorscheme railscasts
-let g:airline_theme='base16_eighties'
+" colorscheme stelinabox
+" let g:airline_theme='base16_eighties'
+"
+colorscheme jaybeenight
+let g:airline_theme='jaybee'
 
 
 " ----------------------------------------------------------------------------
@@ -321,7 +325,7 @@ let g:clang_format#style_options = {
       \ "MaxEmptyLinesToKeep": 2,
       \ "NamespaceIndentation": "All",
       \ "BraceWrapping": {
-      \   "AfterEnum": "true",
+      \   "AfterEnum": "false",
       \   "AfterStruct": "false",
       \   "AfterControlStatement": "false",
       \   "AfterFunction": "false",
@@ -356,13 +360,14 @@ vnoremap <Leader>cf :ClangFormat<CR>
 autocmd FileType c,cpp,objc,java,javascript nnoremap <Leader>cc :.-1,.+1Neoformat<CR>
 
 "compile and run single source file without leaving vim
-autocmd filetype cpp nnoremap <f8> :w <bar> exec '!g++ -std=c++17 -Wall -Wextra -g '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
+autocmd filetype cpp nnoremap <f8> :w <bar> exec '!g++ -std=c++17 -Wall -Wextra -g -pthread '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
 autocmd filetype c nnoremap <f8> :w <bar> exec '!gcc  -Wall -Wextra -g '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
 autocmd filetype ruby nnoremap <F8> :w <bar> exec '!ruby '.shellescape('%')<CR>
 autocmd filetype javascript nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
 autocmd filetype lua nnoremap <F8> :w <bar> exec '!/usr/bin/lua5.3 '.shellescape('%')<CR>
 autocmd filetype jsx nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
 autocmd filetype javascript.jsx nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
+autocmd filetype pl nnoremap <F8> :w <bar> exec '!perl '.shellescape('%')<CR>
 
 " " Custom header to C/C++ files
 " autocmd bufnewfile *.{h,hpp,hh,c,cpp,cc} so /home/stel/.vim/templates/c_template.txt
@@ -502,6 +507,8 @@ set laststatus=2
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
+let g:comfortable_motion_scroll_down_key = "j"
+let g:comfortable_motion_scroll_up_key = "k"
 " -----------------------------------------------------------------------------
 " Make the dot command work as expected in visual mode (via
 " https://www.reddit.com/r/vim/comments/3y2mgt/do_you_have_any_minor_customizationsmappings_that/cya0x04)
@@ -525,6 +532,38 @@ if has('persistent_undo')
     set undolevels=1000
     set undoreload=10000
 endif
+
+" swap lines 
+
+function! s:swap_lines(n1, n2)
+    let line1 = getline(a:n1)
+    let line2 = getline(a:n2)
+    call setline(a:n1, line2)
+    call setline(a:n2, line1)
+endfunction
+
+function! s:swap_up()
+    let n = line('.')
+    if n == 1
+        return
+    endif
+
+    call s:swap_lines(n, n - 1)
+    exec n - 1
+endfunction
+
+function! s:swap_down()
+    let n = line('.')
+    if n == line('$')
+        return
+    endif
+
+    call s:swap_lines(n, n + 1)
+    exec n + 1
+endfunction
+
+nmap  <Leader>kk :call <SID>swap_up()<CR>
+nmap  <Leader>jj :call <SID>swap_down()<CR>
 
 " easymotion
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
@@ -626,11 +665,10 @@ endfunction
 
 nmap <leader>bt :!tmux send-keys -t "build" Up Enter<CR><CR>
 
-function! RunAndShowImage(dir)
+function! RunFromBuild(dir)
 
        if isdirectory(a:dir)
-        let result = system( "cd " . a:dir . " && ./main && feh image.jpg " )
-
+        let result = system( "cd " . a:dir . " && make -j8 && ./main " )
         split __Build_output__
         normal! ggdG
         setlocal filetype=krcppbuild
@@ -645,10 +683,37 @@ function! RunAndShowImage(dir)
         " setlocal nomodifiable
 
         :map <buffer> q :bd<cr>
+ 
     else
         echo "build folder was not found, Cannot run and display image"
     endif
 endfunction
+
+" this is used for my personal project ' Platformer '
+function! RunFromPlatform(dir)
+
+       if isdirectory(a:dir)
+        let result = system( "cd " . a:dir . " && make -j8 && ./Platformer " )
+        split __Build_output__
+        normal! ggdG
+        setlocal filetype=krcppbuild
+        setlocal buftype=nofile
+        setlocal bufhidden=hide
+        setlocal nobuflisted
+
+        " Insert the bytecode.
+        call append(0, split(result, '\v\n'))
+        setlocal nonumber
+        setlocal norelativenumber
+        " setlocal nomodifiable
+
+        :map <buffer> q :bd<cr>
+ 
+    else
+        echo "build folder was not found, Cannot run and display image"
+    endif
+endfunction
+
 
 
 if isdirectory("build")
@@ -658,6 +723,7 @@ if isdirectory("build")
     nmap <leader>br :call BuildCMakeProjectShort("run", "build")<CR>
     nmap <leader>bc :call BuildCMakeProjectShort("clean", "build")<CR>
     nmap <leader>bf :call BuildCMakeProjectShort("format", "build")<CR>
-    nmap <leader>rs :call RunAndShowImage("build")<CR>
+    nmap <leader>re :call RunFromBuild("build")<CR>
+    nmap <leader>rp :call RunFromPlatform("build")<CR>
 endif
 

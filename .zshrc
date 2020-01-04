@@ -105,6 +105,8 @@ export PATH=~/.npm-global/bin:$PATH
 # vi = vim instead of launching vi
 alias vi=vim
 
+alias nile=./nile.sh
+
 # nice, more readable manual! This is a must
 man() {
     env \

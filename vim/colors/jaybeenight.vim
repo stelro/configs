@@ -75,7 +75,7 @@ hi PMenuThumb                guifg=#ffffff guibg=#a8a8a8 gui=NONE ctermfg=15 cte
 " ---------------
 hi Comment                   guifg=#31B72C ctermfg=244
 hi Todo                      guifg=#cfbfad guibg=NONE gui=bold ctermfg=167 ctermbg=NONE cterm=bold
-hi Constant                  guifg=#85ecd7 ctermfg=169
+hi Constant                  guifg=#bdb395 ctermfg=169
 hi Error                     guifg=#ff0000 guibg=NONE ctermfg=88 ctermbg=NONE
 hi WarningMsg                guifg=#ff0000 guibg=NONE ctermfg=1 ctermbg=NONE
 hi ErrorMsg                  guifg=#ff0000 guibg=NONE ctermfg=1 ctermbg=NONE
