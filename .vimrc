@@ -1,13 +1,13 @@
 "        _
 " __   _(_)_ __ ___  _ __ ___
-" /
 " \ \ / / | '_ ` _ \| '__/ __|
 "  \ V /| | | | | | | | | (__
 "   \_/ |_|_| |_| |_|_|  \___|
 "
-" Stel's .vimrc file
+" Rostislav Stelmach's .vimrc config file
+" for C/C++ Development
 "
-" Last Update: 05/10/2019
+" Last Update: 14/12/2020
 " stelmach.ro[at]gmail.com
 "
 set nocompatible              " be iMproved, required
@@ -19,26 +19,14 @@ filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
+"Keep Plugin commands between vundle#begin/end.
 call vundle#begin()
 
-" let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'tomtom/tcomment_vim'
-"Keep Plugin commands between vundle#begin/end.
 Plugin 'tpope/vim-fugitive'
-" :GV - commit browser
-" :GV! only commits for current file
-"  o or <cr> on a commit to display the content of it
-"  o or <cr> on commits to display the diff in the range
-"  O opens a new tab instead
-"  gb for :Gbrowse
-"  ]] and [[ to move between commits
-"  . to start command-line with :Git [CURSOR] SHA à la fugitive
-"  q to close
 Plugin 'junegunn/gv.vim'
-" Sourdings, parantheses, brackes, quotes, XML Tags 
-" with cs"' to change from "" to ''
-"Plugin 'dense-analysis/ale'
+Plugin 'chriskempson/base16-vim'
 Plugin 'tpope/vim-surround'
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -47,22 +35,14 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'scrooloose/nerdTree'
 Plugin 'vim-scripts/argtextobj.vim'
-" User defined operators/actions
 Plugin 'kana/vim-operator-user'
-Plugin 'vimwiki/vimwiki'
-Plugin 'michaeljsmith/vim-indent-object'
-Plugin 'christoomey/vim-sort-motion'
 Plugin 'tikhomirov/vim-glsl'
 Plugin 'danro/rename.vim'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown' 
 Plugin 'yuttie/comfortable-motion.vim'
-" better cooperation with tmux
-Plugin 'christoomey/vim-tmux-navigator'
-" gutter for marks
 Plugin 'kshenoy/vim-signature'
-" Vim plug for switching between companion source files (e.g. .h and .cpp)
 Plugin 'derekwyatt/vim-fswitch'
 Plugin 'rhysd/vim-clang-format'
 Plugin 'sbdchd/neoformat'
@@ -95,55 +75,50 @@ filetype plugin on
 " ----------------------------------------------------------------------------
 
 syntax on
-let mapleader = " "         "set leader key to comma
-"set number  "Show line numbers
-"set relativenumber
-
-nmap <leader>num :set nu! <CR>:set rnu!<CR>
-set wrap  "enable wraping
-set linebreak   "Break lines at word (requires Wrap lines)
-set nolist         " list disables linebreak
-set scrolloff=5         " 2 lines above/below cursor when scrolling
-set noswapfile  " turn off swapfiles
-set wrapmargin=0  "Disable line wrap
-set ruler   "Show row and column ruler information
-set showbreak=+++   "Wrap-broken line prefix
-set showmatch   "Highlight matching brace
-set showcmd             " show command in bottom bar
-set title               " show file in titlebar
-set showmode            " show mode in status bar (insert/replace/...)
-"set visualbell  "Use visual bell (no beeping)
-set cursorline          " highlight current line
-set matchpairs+=<:>     " specially for html
-set hlsearch    "Highlight all search results
-set smartcase   "Enable smart-case search
-set ignorecase  "Always case-insensitive
-set incsearch   "Searches for strings incrementally
-set virtualedit=onemore  "allow to go one character behind the end of the line
-set autoindent  "Auto-indent new lines
-set expandtab   "Use spaces instead of tabs
-set shiftwidth=2    "Number of auto-indent spaces
-set smartindent "Enable smart-indent
-set smarttab    "Enable smart-tabs
-set softtabstop=2   "Number of spaces per Tab
-set wildmenu            " visual autocomplete for command menu
-set wildignore+=*.o,*.obj,*.bak,*.exe,*.py[co],*.swp,*~,*.pyc,.svn,*/cm/log/**,tags,*.jpg,*.png,*.jpeg,*.png,*.mesh,build*/**,build/**,*.sublime-workspace,*.svg,build2/**,build3/**
-set lazyredraw          " redraw only when we need to.
-set confirm             " get a dialog when :q, :w, or :wq fails
-set nobackup            " no backup~ files.
-set viminfo='20,\"500   " remember copy registers after quitting in the .viminfo file -- 20 jump links, regs up to 500 lines'
+let mapleader = " "         " Set leader key to comma
+set number                  " Show line numbers
+set relativenumber          " Show relative numbers
+set wrap                    " Enable wraping
+set linebreak               " Break lines at word (requires Wrap lines)
+set nolist                  " List disables linebreak
+set scrolloff=5             " 5 lines above/below cursor when scrolling
+set noswapfile              " Turn off swapfiles
+set wrapmargin=0            " Disable line wrap
+set ruler                   " Show row and column ruler information
+set showbreak=+++           " Wrap-broken line prefix (shows +++)
+set showmatch               " Highlight matching brace
+set showcmd                 " Show command in bottom bar
+set title                   " Show file in titlebar
+set showmode                " Show mode in status bar (insert/replace/...)
+set cursorline              " Highlight current line
+set hlsearch                " Highlight all search results
+set smartcase               " Enable smart-case search
+set ignorecase              " Always case-insensitive
+set incsearch               " Searches for strings incrementally
+set virtualedit=onemore     " allow to go one character behind the end of the line
+set autoindent              " Auto-indent new lines
+set expandtab               " Use spaces instead of tabs (Spaces are always 1 width in every OS)
+set shiftwidth=4            " Number of auto-indent spaces
+set smartindent             " Enable smart-indent
+set smarttab                " Enable smart-tabs
+set softtabstop=4           " Number of spaces per Tab
+set wildmenu                " Visual autocomplete for command menu
+set lazyredraw              " Redraw only when we need to.
+set confirm                 " Get a dialog when :q, :w, or :wq fails
+set nobackup                " No backup~ files.
 set textwidth=100           " 100 is the new 80
-set hidden              " remember undo after quitting
-set history=150          " keep 150 lines of command history
-set mouse=v             " use mouse in visual mode (not normal,insert,command,help mode
-set t_ut=
+set hidden                  " Remember undo after quitting
+set history=200             " Keep 200 lines of command history
+set mouse=v                 " Use mouse in visual mode (not normal,insert,command,help mode)
 set previewheight=7
 " display whitespace
 set listchars=tab:>-,trail:~,extends:>,precedes:<
 "set listchars=eol: ,tab:>-,trail:~,extends:>,precedes:<
-
 set tags=./tags;/   "This will look in the current directory for 'tags', and work up the tree towards root until one is found.
 set cscopetag
+
+set wildignore+=*.o,*.obj,*.bak,*.exe,*.py[co],*.swp,*~,*.pyc,.svn,*/cm/log/**,tags,*.jpg,*.png,*.jpeg,*.png,*.mesh,build*/**,build/**,*.sublime-workspace,*.svg,build2/**,build3/**
+
 
 command! Ctagsgenerate :!ctags -R .
 command! Gtagsgenerate :!gtags
@@ -166,6 +141,7 @@ abbr cosnt const
 nmap Q  <silent>
 nmap q: <silent>
 nmap K  <silent>
+
 " I always hit ":W" instead of ":w" because I linger on the shift key...
 command! Q q
 command! W w
@@ -192,7 +168,6 @@ command! GGFiles call fzf#run(fzf#wrap({'source': 'if [ -d .git ] ; then git ls-
 " KEY BINDING
 " ----------------------------------------------------------------------------
 nnoremap <Leader>f :GGFiles<cr>
-" nnoremap <C-p> :CtrlP<cr>
 nnoremap <Leader>. :BTags<cr>
 nnoremap <Leader>, :Tags<cr>
 nnoremap <Leader>q :CtrlPQuickfix<cr>
@@ -205,11 +180,11 @@ nnoremap tg :bprev<CR>
 nnoremap <Leader>sc :set spell spelllang=en_us<CR>
 nnoremap <Leader>sd :set nospell<CR>
 
+" Disable / Enable line numbers sith <Leader>num
+nmap <leader>num :set nu! <CR>:set rnu!<CR>
+
 "save current buffer
 nnoremap <leader>w :w<cr>
-
-"set line numbers
-nnoremap <Leader>ts :set invnumber<CR>
 
 " Git-fugitive stuff
 nmap <leader>g :Gstatus<cr>gg<C-n>
@@ -252,11 +227,6 @@ nnoremap <Leader>wl <C-w><C-w>
 "nerdtree
 nnoremap <Leader>pt :NERDTreeToggle<CR>
 
-" vimwiki
-command! WTable :VimwikiTable
-command! WToc :VimwikiTOC
-command! WTags :VimwikiRebuildTags
-
 "strip whitespace
 nnoremap <leader>sw :%s/\s\+$//<cr>:let @/=''<CR>
 command! Stripwhitespace :%s/\s\+$//
@@ -271,13 +241,6 @@ nmap ga <Plug>(EasyAlign)
 nmap <leader>dd :s/\(^.*$\)/\1\r\1/<CR>:noh<CR>
 xmap <leader>dd :'<,'>s/\(.*\)/\1\r\1/<CR>:noh<CR>
 
-" ----------------------------------------------------------------------------
-" THEMES STUFF
-" ----------------------------------------------------------------------------
-" let g:dracula_colorterm = 0 
-" let g:space_vim_dark_background = 234
-" hi LineNr ctermbg=NONE guibg=NONE
-"
 " " Enable true color 
 if exists('+termguicolors')
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -291,24 +254,35 @@ let g:cpp_class_decl_highlight = 1
 let g:cpp_experimental_template_highlight = 1
 let g:cpp_concepts_highlight = 1
 
+let &t_SI.="\e[5 q"
+let &t_SR.="\e[4 q"
+let &t_EI.="\e[1 q"
 
 set background=dark
 nnoremap <leader>1 :colorscheme jaybeenight<cr>:AirlineTheme jaybee<cr>
-nnoremap <leader>2 :colorscheme stelinabox<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>3 :colorscheme themeinabox<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>4 :colorscheme themeinabox-transparent<cr>:AirlineTheme base16_eighties<cr>
-nnoremap <leader>5 :colorscheme xcode_dark<cr>:AirlineTheme deus<cr>
-nnoremap <leader>6 :colorscheme xcode<cr>:AirlineTheme sol<cr>
+nnoremap <leader>2 :colorscheme base16-gruvbox-dark-hard<cr>
+nnoremap <leader>3 :colorscheme base16-gruvbox-light-soft<cr>
 
+" Colorscheme settings for Base16 Gruvbox 
+let base16colorspace=256
+colorscheme base16-gruvbox-dark-hard
+hi Normal ctermbg=NONE
 
-" colorscheme stelinabox
-" let g:airline_theme='base16_eighties'
-"
-colorscheme jaybeenight
-let g:airline_theme='jaybee'
+if !has('gui_running')
+  set t_Co=256
+endif
 
+" Base colors :
+" gui0E -> pink / gui08 -> red / gui0A -> yellow
+call Base16hi("Comment", g:base16_gui03, "", g:base16_cterm03,  "", "", "")
+call Base16hi("Error", g:base16_gui08, g:base16_gui01, g:base16_cterm08, g:base16_cterm01, "none", "")
+call Base16hi("VertSplit", g:base16_gui03, g:base16_gui00, g:base16_cterm03, g:base16_cterm00, "none", "")
+call Base16hi("CursorLineNr", g:base16_gui06, "", g:base16_cterm06, "", "none", "")
+call Base16hi("Todo", g:base16_gui0C, g:base16_gui00, g:base16_cterm0C, g:base16_cterm00, "none", "")
+call Base16hi("Type", g:base16_gui0E, "", g:base16_cterm0E, "", "", "")
 
 " ----------------------------------------------------------------------------
+"
 " C++ Stuff
 " ----------------------------------------------------------------------------
 " CLANG FORMAT
@@ -321,9 +295,9 @@ let g:clang_format#style_options = {
       \ "BreakBeforeBraces": "Custom",
       \ "BreakConstructorInitializersBeforeComma": "true",
       \ "IndentCaseLabels": "true",
-      \ "IndentWidth":     2,
+      \ "IndentWidth": 4,
       \ "MaxEmptyLinesToKeep": 2,
-      \ "NamespaceIndentation": "All",
+      \ "NamespaceIndentation": "None",
       \ "BraceWrapping": {
       \   "AfterEnum": "false",
       \   "AfterStruct": "false",
@@ -331,24 +305,21 @@ let g:clang_format#style_options = {
       \   "AfterFunction": "false",
       \   "AfterNamespace": "false",
       \   "BeforeElse": "false"},
-      \ "ObjCBlockIndentWidth": 2,
-      \ "SpaceBeforeCpp11BracedList": "true",
-      \ "SpaceBeforeRangeBasedForLoopColon": "true",
+      \ "ObjCBlockIndentWidth": 4,
       \ "SpacesBeforeTrailingComments": 4,
       \ "SpacesInCStyleCastParentheses": "true",
       \ "SpacesInContainerLiterals": "true",
       \ "SpacesInParentheses": "true",
       \ "SpacesInSquareBrackets": "true",
       \ "AlignTrailingComments": "true",
-      \ "TabWidth": 2}
+      \ "AccessModifierOffset": -4,
+      \ "TabWidth": 4}
 
 augroup ClangFormatSettings
     autocmd!
     " if you install vim-operator-user
     autocmd FileType c,cpp,cc,objc,java,javascript,glsl map <buffer><Leader>c <Plug>(operator-clang-format)
-    autocmd FileType c,cpp,cc syntax clear cppSTLconstant
-    autocmd FileType vimwiki nmap <leader>tts :TaskWikiMod +sprint<CR>
-    autocmd FileType vimwiki nmap <leader>ttS :TaskWikiMod -sprint<CR>
+    autocmd FileType cpp,cc syntax clear cppSTLconstant
 augroup END
 
 " Neoformat
@@ -361,31 +332,15 @@ autocmd FileType c,cpp,objc,java,javascript nnoremap <Leader>cc :.-1,.+1Neoforma
 
 "compile and run single source file without leaving vim
 autocmd filetype cpp nnoremap <f8> :w <bar> exec '!g++ -std=c++17 -Wall -Wextra -g -pthread '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
-autocmd filetype c nnoremap <f8> :w <bar> exec '!gcc  -Wall -Wextra -g '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
+autocmd filetype c nnoremap <f8> :w <bar> exec '!gcc  -Wall -Wextra -g -O0 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
 autocmd filetype ruby nnoremap <F8> :w <bar> exec '!ruby '.shellescape('%')<CR>
 autocmd filetype javascript nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
 autocmd filetype lua nnoremap <F8> :w <bar> exec '!/usr/bin/lua5.3 '.shellescape('%')<CR>
 autocmd filetype jsx nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
 autocmd filetype javascript.jsx nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
 autocmd filetype pl nnoremap <F8> :w <bar> exec '!perl '.shellescape('%')<CR>
+autocmd filetype python nnoremap <F8> :w <bar> exec '!python3 '.shellescape('%')<CR>
 
-" " Custom header to C/C++ files
-" autocmd bufnewfile *.{h,hpp,hh,c,cpp,cc} so /home/stel/.vim/templates/c_template.txt
-" autocmd bufnewfile *.{h,hpp,hh,c,cpp,cc} exe "1," . 8 . "g/$File:.*/s//$File: " .expand("%")
-" autocmd bufnewfile *.{h,hpp,hh,c,cpp,cc} exe "1," . 8 . "g/$Date:.*/s//$Date: " .strftime("%d-%m-%Y")
-" autocmd Bufwritepre,filewritepre *.{h,hpp,hh,c,cpp,cc} execute "normal ma"
-" autocmd Bufwritepre,filewritepre *.{h,hpp,hh,c,cpp,cc} exe "1," . 8 . "g/$Revision:.*/s/$Revision:.*/$Revision: " .strftime("%d-%m-%Y")
-" autocmd bufwritepost,filewritepost *.{h,hpp,hh,c,cpp,cc} execute "normal `a"
-"
-
-"auto C/C++ header files guards
-function! s:insert_gates()
-  let gatename = substitute(toupper(expand("%:t")), "\\.", "_", "g")
-  execute "normal! i#pragma once " 
-  normal! kk
-endfunction
-
-autocmd BufNewFile *.{h,hpp,hh} call <SID>insert_gates()
 noremap <Leader>s :update<CR>
 "switch between header/source with Ctr+2
 map <C-2> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,.hh,.cc,:s,.X123X$,.cpp,<CR>
@@ -400,29 +355,30 @@ set pastetoggle=<F2>
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
-"" turn on completion in comments
-let g:ycm_complete_in_comments=1
-"" load ycm conf by default
+" turn off completion in comments
+let g:ycm_complete_in_comments=0
+" load ycm conf by default
 let g:ycm_confirm_extra_conf=0
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-"" turn on tag completion
+" turn on tag completion
 let g:ycm_collect_identifiers_from_tags_files=1
-"" only show completion as a list instead of a sub-window
+" only show completion as a list instead of a sub-window
 set completeopt-=preview
-"" start completion from the first character
+" start completion from the first character
 let g:ycm_min_num_of_chars_for_completion=4
-"" don't cache completion items
+" don't cache completion items
 let g:ycm_cache_omnifunc=0
-"" complete syntax keywords
+" complete syntax keywords
 let g:ycm_seed_identifiers_with_syntax=1
 let g:ycm_max_num_candidates = 10
 
-let g:ycm_error_symbol = '●'
-let g:ycm_warning_symbol = '.'
+let g:ycm_error_symbol = '>>'
+let g:ycm_warning_symbol = '>>'
 let g:ycm_max_diagnostics_to_display = 0
-"let g:ycm_enable_diagnostic_signs=0
-"let g:ycm_show_diagnostics_ui = 0
-
+let g:ycm_enable_diagnostic_signs=1
+let g:ycm_show_diagnostics_ui =1
+highlight YcmErrorSection guibg=#17191A
+highlight YcmWarningSection guibg=#17191A
 
 nnoremap <Leader>yj :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <Leader>yg :YcmCompleter GoTo<CR>
@@ -446,6 +402,8 @@ nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
 set autoread
 au CursorHold * checktime
 
+:nmap <F1> <nop>
+
 "Advanced
 set undolevels=1000 "Number of undo levels
 set backspace=indent,eol,start  "Backspace behaviour
@@ -455,22 +413,12 @@ augroup filetypedetect
     au BufReadPost,BufNewFile *.compositor set ft=compositor
     au BufReadPost,BufNewFile *.material set ft=material
     au BufReadPost,BufNewFile *.glsl,*.cg set ft=glsl
-    au BufReadPost,BufNewFile content.txt set ft=fitnesse
     au BufReadPost,BufNewFile database.txt,*.conf set ft=conf
     au BufReadPost,BufNewFile config.in set ft=kconfig
     au BufReadPost,BufNewFile *.xml set tabstop=4
     au BufReadPost,BufNewFile *.crt set ft=crt
 augroup END
 
-"folding
-
-" set foldenable          " enable folding
-" set foldlevelstart=10   " open most folds by default
-" set foldnestmax=10      " 10 nested fold max
-" nnoremap <space> za
-" nnoremap z<space> zA
-" set foldmethod=indent   " fold based on indent level
-"
 "save with root
 command! Wroot :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
@@ -499,13 +447,13 @@ let g:airline#extensions#default#section_truncate_width = {
 let w:airline_skip_empty_sections = 1
 " let g:airline_section_b=' %{fugitive#head()}'
 let g:airline#extensions#hunks#enabled = 0
-let g:airline#extensions#wordcount#enabled = 0
-let g:airline_section_z='☰ %l/%L:%c'
+let g:airline#extensions#wordcount#enabled = 1
+let g:airline_section_z='%l:%c'
 let g:airline#extensions#branch#format = 2
 set laststatus=2
 
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 0
+let g:airline#extensions#tabline#enabled = 0
 
 let g:comfortable_motion_scroll_down_key = "j"
 let g:comfortable_motion_scroll_up_key = "k"
@@ -534,7 +482,6 @@ if has('persistent_undo')
 endif
 
 " swap lines 
-
 function! s:swap_lines(n1, n2)
     let line1 = getline(a:n1)
     let line2 = getline(a:n2)
@@ -567,37 +514,14 @@ nmap  <Leader>jj :call <SID>swap_down()<CR>
 
 " easymotion
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
-" nmap <Leader>w <Plug>(easymotion-w)
-
-" Bi-directional find motion
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-"nmap s <Plug>(easymotion-s)
-" or
-" `s{char}{char}{label}`
 " Need one more keystroke, but on average, it may be more comfortable.
 nmap ss <Plug>(easymotion-s2)
-
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
 
 vnoremap <leader>j :m '>+1<CR>gv=gv
 vnoremap <leader>k :m '<-2<CR>gv=gv
 
-"ale config
-let g:ale_sign_error = '●' "Less aggressive than the default '>>'
-let g:ale_sign_warning = '.'
-let g:ale_lint_on_enter = 0 "Less dsitracting when opening new file
-
-" markdown ctags
-let g:tagbar_type_markdown = {
-    \ 'ctagstype' : 'vimwiki',
-    \ 'kinds' : [
-        \ 'h:Heading_L1',
-        \ 'i:Heading_L2',
-        \ 'k:Heading_L3'
-    \ ]
-\ }
 let g:tagbar_type_markdown = {
     \ 'ctagstype' : 'markdown',
     \ 'kinds' : [
@@ -623,107 +547,3 @@ vnoremap <silent> # :<C-U>
   \gvy?<C-R><C-R>=substitute(
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
-
-" ----------------------------------------------------------------------------
-" Building Projects
-" ----------------------------------------------------------------------------
-
-" CMake support
-function! BuildCMakeProjectShort(target, dir)
-    echom a:target
-    if isdirectory(a:dir)
-        silent !clear
-        execute "! cd " . a:dir . " && clear && cmake --build . --target " . a:target . " -- -j" . (system('grep -c ^processor /proc/cpuinfo')+1) . " && echo '-- Build was OK'"
-    else
-        echo "build folder was not found, cannot build"
-    endif
-endfunction
-
-function! BuildCMakeProject(target, dir)
-    echom a:target
-    if isdirectory(a:dir)
-        let result = system( "cd " . a:dir . " && clear && cmake --build . --target " . a:target . " -- -j" . (system('grep -c ^processor /proc/cpuinfo')+1) . " 2>&1 && echo '-- Build was OK'")
-
-        split __Build_output__
-        normal! ggdG
-        setlocal filetype=krcppbuild
-        setlocal buftype=nofile
-        setlocal bufhidden=hide
-        setlocal nobuflisted
-
-        " Insert the bytecode.
-        call append(0, split(result, '\v\n'))
-        setlocal nonumber
-        setlocal norelativenumber
-        " setlocal nomodifiable
-
-        :map <buffer> q :bd<cr>
-    else
-        echo "build folder was not found, cannot build"
-    endif
-endfunction
-
-nmap <leader>bt :!tmux send-keys -t "build" Up Enter<CR><CR>
-
-function! RunFromBuild(dir)
-
-       if isdirectory(a:dir)
-        let result = system( "cd " . a:dir . " && make -j8 && ./main " )
-        split __Build_output__
-        normal! ggdG
-        setlocal filetype=krcppbuild
-        setlocal buftype=nofile
-        setlocal bufhidden=hide
-        setlocal nobuflisted
-
-        " Insert the bytecode.
-        call append(0, split(result, '\v\n'))
-        setlocal nonumber
-        setlocal norelativenumber
-        " setlocal nomodifiable
-
-        :map <buffer> q :bd<cr>
- 
-    else
-        echo "build folder was not found, Cannot run and display image"
-    endif
-endfunction
-
-" this is used for my personal project ' Platformer '
-function! RunFromPlatform(dir)
-
-       if isdirectory(a:dir)
-        let result = system( "cd " . a:dir . " && make -j8 && ./Platformer " )
-        split __Build_output__
-        normal! ggdG
-        setlocal filetype=krcppbuild
-        setlocal buftype=nofile
-        setlocal bufhidden=hide
-        setlocal nobuflisted
-
-        " Insert the bytecode.
-        call append(0, split(result, '\v\n'))
-        setlocal nonumber
-        setlocal norelativenumber
-        " setlocal nomodifiable
-
-        :map <buffer> q :bd<cr>
- 
-    else
-        echo "build folder was not found, Cannot run and display image"
-    endif
-endfunction
-
-
-
-if isdirectory("build")
-    nmap <leader>ba :call BuildCMakeProject("all", "build")<CR>
-    nmap <leader>bt :call BuildCMakeProject("catch", "build")<CR>
-    nmap <leader>be :call BuildCMakeProject("main", "build")<CR>
-    nmap <leader>br :call BuildCMakeProjectShort("run", "build")<CR>
-    nmap <leader>bc :call BuildCMakeProjectShort("clean", "build")<CR>
-    nmap <leader>bf :call BuildCMakeProjectShort("format", "build")<CR>
-    nmap <leader>re :call RunFromBuild("build")<CR>
-    nmap <leader>rp :call RunFromPlatform("build")<CR>
-endif
-

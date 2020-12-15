@@ -1,35 +1,143 @@
-###########################
-#  Configuration
-###########################
 
-set -g default-terminal "screen-256color"
+unbind C-b
+set -g prefix C-a
+set-option -g prefix C-a
+# set-option -g prefix C-b
+bind-key -n C-b send-prefix
+# bind C-b send-prefix
+bind-key C-a last-window
+bind-key C-c new-window
+bind-key C-n next-window
+bind-key C-p previous-window
+bind-key C command-prompt -p "Name of new window: " "new-window -n '%%'"
 
-# increase scroll back history
-set -g history-limit 5000
+# ！！！importent！！！ 开启24 bit color 其他方式都无效
+set -g default-terminal "tmux-256color"
+set -ga terminal-overrides ",*256col*:Tc"
 
-#start window index at 1
+# detach client
+bind-key d detach
+bind-key C-d detach
+
+# choose a client to detach
+bind-key D choose-client
+
+# choose window/session
+bind-key "'" choose-window
+bind-key 'S' choose-session
+
+# display visible indicator of each pane
+bind-key w display-panes
+
+# swap panes
+bind-key -r J swap-pane -D
+bind-key -r K swap-pane -U
+
+# kill current pane/window
+bind-key q confirm-before kill-pane
+bind-key Q confirm-before kill-window
+bind-key C-q confirm-before kill-pane
+
+# Ctrl-Left/Right cycles thru windows (no prefix)
+bind-key -n "C-Left"  select-window -t :-
+bind-key -n "C-Right" select-window -t :+
+
+# Ctrl-Up/Down cyles thru panes (no prefix)
+bind-key -n "C-Up"   select-pane -t :.-
+bind-key -n "C-Down" select-pane -t :.+
+
+# title (default key in tmux is ',')
+bind-key A command-prompt "rename-window %%"
+
+# toogle status bar
+bind-key t set -g status
+
+# displays
+bind-key * list-clients
+
+# reload config
+bind R source-file ~/.tmux.conf \; display-message "Config reloaded..."
+
+set -g history-limit 10000
+
+# Start numbering at 0
 set -g base-index 1
 
-#start pane index at 1
-setw -g pane-base-index 1
+# Relax!
+set -sg escape-time 0
+set -sg repeat-time 600
 
-#hightlight window when it has new activity
+# listen for activity on all windows
+set -g bell-action any
+
+# super useful when using "grouped sessions" and multi-monitor setup
+setw -g aggressive-resize on
+
+set -g display-time 400
+
+# Automatically set window title
+set-window-option -g automatic-rename on
+setw -g automatic-rename on
+set-option -g set-titles on
+
+# y and p as in vim
+# bind Escape copy-mode
+# unbind p
+# bind p paste-buffer
+# bind -t vi-copy 'v' begin-selection
+# bind -t vi-copy 'y' copy-selection
+# bind -t vi-copy 'Space' halfpage-down
+# bind -t vi-copy 'Bspace' halfpage-up
+
+# Copy mode
+setw -g mode-keys vi
+bind [ copy-mode
+unbind p
+bind p paste-buffer
+# bind -t vi-copy v begin-selection
+# bind -t vi-copy y copy-selection
+
+# easy-to-remember split pane commands
+bind-key | split-window -h
+bind-key - split-window -v
+bind-key _ split-window -v
+
+# moving between panes with vim movement keys
+bind-key C-h select-pane -L
+bind-key C-j select-pane -D
+bind-key C-k select-pane -U
+bind-key C-l select-pane -R
+
+bind-key h select-pane -L
+bind-key j select-pane -D
+bind-key k select-pane -U
+bind-key l select-pane -R
+
+# resize panes with vim movement keys
+bind -r H resize-pane -L 5
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r L resize-pane -R 5
+
+# resize panes with vim movement keys - small step
+bind -r < resize-pane -L 1
+bind -r > resize-pane -R 1
+
+# smart pane switching with awareness of vim splits
+bind -n C-h run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-h) || tmux select-pane -L"
+bind -n C-j run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-j) || tmux select-pane -D"
+bind -n C-k run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-k) || tmux select-pane -U"
+bind -n C-l run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-l) || tmux select-pane -R"
+bind -n C-\\ run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys 'C-\\') || tmux select-pane -l"
+
+
+# enable activity alerts
 setw -g monitor-activity on
 set -g visual-activity on
+set -g status-interval 15
 
-###########################
-# Status Bar
-###########################
-
-
-#enable utf-8 support in status bar
-#set -g status-utf8 on
-
-#set refresh interval for status bar
-set -g status-interval 30
-
-#center the status bar
-set -g status-justify left
+# set default terminal - this is necessary for VIM begin and end to work
+set -g default-terminal screen-256color
 
 # show session, window, pane in left status bar
 set -g status-left-length 40
@@ -41,34 +149,74 @@ set-option -g status-right '#[fg=colour154]#H#[default] %m/%d/%y %I:%M\
 
  # Colors - derived from Powerline Double Cyan by Jim Myhrberg
  set -g status-interval 0
- set -g status-fg colour240
- set -g status-bg colour233
+ set -g status-style fg=colour240
+ set -g status-style bg=colour233
  set -g status-left "#[fg=colour222] #{host} "
  set -g status-right "#[fg=colour222]:#{session_name} : #{window_index}.#{pane_index} "
  set -g window-status-format "#[bg=colour233,fg=colour240]  ⋅#I⋅ #W "
- set -g window-status-current-format "#[bg=colour233,fg=colour240,nobold] 《#I》#W #[fg=black,bg=colour233,nobold]"
- set -g window-status-current-bg colour39
- set -g window-status-current-fg colour235
- set -g window-status-activity-bg colour245 # fg and bg are flipped here due to
- set -g window-status-activity-fg colour233 # a bug in tmux
+ set -g window-status-current-format "#[bg=colour233,fg=colour240,nobold] :#I: #W #[fg=black,bg=colour233,nobold]"
+ set -g window-status-current-style bg=colour39
+ set -g window-status-current-style fg=colour234
+ set -g window-status-activity-style bg=colour245 # fg and bg are flipped here due to
+ set -g window-status-activity-style fg=colour233 # a bug in tmux
  set -g window-status-separator ""
  set -g status-justify centre
- set -g pane-border-bg default
- set -g pane-border-fg colour238
- set -g pane-active-border-bg default
- set -g pane-active-border-fg colour39
+ set -g pane-border-style default
+ set -g pane-border-style fg=colour238
+ set -g pane-active-border-style default
+ set -g pane-active-border-style fg=colour239
  set -g display-panes-colour colour233
  set -g display-panes-active-colour colour245
  set -g clock-mode-colour colour39
  set -g clock-mode-style 24
- set -g message-bg black
- set -g message-fg colour39
- set -g message-command-bg colour233
- set -g message-command-fg black
- set -g mode-bg colour39
- set -g mode-fg colour232
+ set -g message-style bg=black
+ set -g message-style fg=colour39
+ set -g message-command-style bg=colour233
+ set -g message-command-style fg=black
+ set -g mode-style bg=colour39
+ set -g mode-style fg=colour232
 
-# tmux prefix
-unbind C-b
-set -g prefix C-a
-set -s escape-time 0
+
+
+# set-window-option -g window-status-fg colour249
+set-window-option -g window-status-activity-style bold
+# set-window-option -g window-status-bell-attr none
+set-window-option -g window-status-activity-style fg=white
+set-window-option -g window-status-activity-style bg=colour237
+set-window-option -g window-status-bell-style bg=red
+
+# """"""""""""""
+# " tmux fixes "
+# """"""""""""""
+# " Handle tmux $TERM quirks in vim
+# if $TERM =~ '^screen-256color'
+#     map <Esc>OH <Home>
+#     map! <Esc>OH <Home>
+#     map <Esc>OF <End>
+#     map! <Esc>OF <End>
+# endif
+
+
+
+# List of plugins
+# Install plugins with " c+a I "
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-copycat'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'tmux-plugins/tmux-open'
+
+
+
+# restore session for vim and neovim
+set -g @resurrect-strategy-vim 'session'
+set -g @resurrect-strategy-nvim 'session'
+set -g @continuum-restore 'on'                #set automatic sessions restore
+set -g @continuum-save-interval '7'           #set autosave interval to lower value
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+if "test ! -d ~/.tmux/plugins/tpm" \
+   "run 'git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm'"
+run '~/.tmux/plugins/tpm/tpm'
+

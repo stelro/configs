@@ -16,9 +16,11 @@ BASE_FLAGS = [
         '-DNDEBUG',
         '-std=c++17',
         '-xc++',
-        '-I/usr/include/c++/8.3.0/',
+        '-I/usr/include/c++/9/',
         '-I/usr/lib/',
         '-I/usr/include/'
+        '-I/usr/include/boost/asio/'
+        '-I/usr/include/boost/'
         ]
 
 SOURCE_EXTENSIONS = [  

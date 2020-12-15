@@ -43,15 +43,15 @@ Do not add anything to your dotfiles if you do not understand what it does.
  <Leader> pt - toggle nerd tree
  <Leader> el - show youcompleteme diagnostic ( errors/warrning )
  ga          - easy align
- <Leader> 1  - switch to railscast theme
- <Leader> 2  - switch to molokai theme
- <Leader> 3  - switch to themeinabox theme
- <Leader> 4  - switch to themeinabox-light theme
- <Leader> 5  - switch to themeinabox-transparent theme
- <Leader> 6  - switch to gruvbox theme
- <Leader> 7  - switch to zenburn theme
+ <Leader> 1  - switch to jaybeenight theme
+ <Leader> 2  - switch to base16-gruvbox-dark-hard theme
+ <Leader> 3  - switch to base16-gruvbox-light-soft theme
 
  <Leader> r  - run / compile current single file ( c++ / c / ruby / js / lua / jsx )
+
+ ss          - easy motion
+ daa         - delete argument form function argument list
+ cia         - change inner argument from function argument list
 ```
 
 
