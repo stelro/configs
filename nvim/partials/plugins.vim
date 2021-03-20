@@ -3,7 +3,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'jiangmiao/auto-pairs'
+"Plug 'jiangmiao/auto-pairs'
 Plug 'machakann/vim-sandwich'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
@@ -35,7 +35,7 @@ Plug 'vim-scripts/MultipleSearch'
 Plug 'wakatime/vim-wakatime'
 " Rust
 Plug 'rust-lang/rust.vim'
-Plug 'jackguo380/vim-lsp-cxx-highlight'
 Plug 'vim-syntastic/syntastic'
+Plug 'arzg/vim-colors-xcode'
 
 call plug#end()
