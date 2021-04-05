@@ -2,7 +2,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+"Plug 'junegunn/fzf.vim'
 "Plug 'jiangmiao/auto-pairs'
 Plug 'machakann/vim-sandwich'
 Plug 'tomtom/tcomment_vim'
@@ -21,12 +21,14 @@ Plug 'plasticboy/vim-markdown'
 Plug 'yuttie/comfortable-motion.vim'
 Plug 'kshenoy/vim-signature'
 Plug 'derekwyatt/vim-fswitch'
+Plug 'rhysd/vim-clang-format'
+Plug 'sbdchd/neoformat'
 " session management
 Plug 'tpope/vim-obsession'
 Plug 'dhruvasagar/vim-prosession'
 Plug 'gikmx/ctrlp-obsession'
 " fast searching
-Plug 'junegunn/fzf'
+"Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'majutsushi/tagbar'
 Plug 'joereynolds/gtags-scope'

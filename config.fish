@@ -1,3 +1,11 @@
+alias ls="exa"
+alias cat="bat"
+alias prime-run="__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only"                                                                                                                                                        
+
+setenv FZF_DEFAULT_COMMAND 'rg --files --ignore-case --hidden'
+setenv FZF_CTRL_T_COMMAND 'fd --type file --follow'
+setenv FZF_DEFAULT_OPTS '--height 20%'
+
 function remarkable
 	if test (count $argv) -lt 1
 		echo "No files given"
@@ -188,3 +196,4 @@ function fish_greeting
 
 	set_color normal
 end
+

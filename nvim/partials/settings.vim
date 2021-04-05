@@ -152,3 +152,9 @@ let g:tagbar_type_markdown = {
 " search for visually selected text
 vnoremap // y/<C-R>"<CR>
 
+augroup ClangFormatSettings
+    autocmd!
+    " if you install vim-operator-user
+    autocmd FileType c,cpp,cc,objc,java,javascript,glsl,rust map <buffer><Leader>c <Plug>(operator-clang-format)
+    autocmd FileType cpp,cc syntax clear cppSTLconstant
+augroup END

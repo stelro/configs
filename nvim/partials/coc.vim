@@ -59,6 +59,7 @@ nnoremap <silent> yo  :<C-u>CocList outline<cr>
 nnoremap <silent> ys  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
 nnoremap <silent> yj  :<C-u>CocNext<CR>
+
 " Do default action for previous item.
 nnoremap <silent> yk  :<C-u>CocPrev<CR>
 " Resume latest coc list

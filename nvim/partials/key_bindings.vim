@@ -1,4 +1,5 @@
-nnoremap <Leader>f :GGFiles<cr>
+nnoremap <Leader>p :Files<cr>
+nnoremap <Leader>g :GGFiles<cr>
 nnoremap <Leader>. :BTags<cr>
 nnoremap <Leader>, :Tags<cr>
 nnoremap <Leader>q :CtrlPQuickfix<cr>
@@ -10,7 +11,7 @@ nnoremap gt :bnext<CR>
 nnoremap tg :bprev<CR>
 nnoremap <Leader>sc :set spell spelllang=en_us<CR>
 nnoremap <Leader>sd :set nospell<CR>
-
+nnoremap <Leader>f :Rg!
 " Disable / Enable line numbers sith <Leader>num
 nmap <leader>num :set nu! <CR>:set rnu!<CR>
 
@@ -18,7 +19,7 @@ nmap <leader>num :set nu! <CR>:set rnu!<CR>
 nnoremap <leader>w :w<cr>
 
 " Git-fugitive stuff
-nmap <leader>g :Gstatus<cr>gg<C-n>
+nmap <leader>s :Gstatus<cr>gg<C-n>
 
 " open header fswitch
 nmap <silent> <F4> :FSHere<cr>
@@ -71,3 +72,11 @@ nmap ga <Plug>(EasyAlign)
 " duplicate lanes TODO
 nmap <leader>dd :s/\(^.*$\)/\1\r\1/<CR>:noh<CR>
 xmap <leader>dd :'<,'>s/\(.*\)/\1\r\1/<CR>:noh<CR>
+
+"Clang format
+let g:neoformat_enabled_python = ['autopep8']
+
+nnoremap <Leader>cf :ClangFormat<CR>
+vnoremap <Leader>cf :ClangFormat<CR>
+" format line +-1
+autocmd FileType c,cpp,objc,java,javascript,rust nnoremap <Leader>cc :.-1,.+1Neoformat<CR>
