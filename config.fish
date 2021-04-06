@@ -2,9 +2,9 @@ alias ls="exa"
 alias cat="bat"
 alias prime-run="__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only"                                                                                                                                                        
 
-setenv FZF_DEFAULT_COMMAND 'rg --files --ignore-case --hidden'
-setenv FZF_CTRL_T_COMMAND 'fd --type file --follow'
-setenv FZF_DEFAULT_OPTS '--height 20%'
+setenv FZF_DEFAULT_COMMAND "git ls-files --cached --others --exclude-standard || fd --type f --type l --hidden --follow"
+setenv FZF_CTRL_T_COMMAND "fd --type file --follow"
+setenv FZF_DEFAULT_OPTS "--height 20%"
 
 function remarkable
 	if test (count $argv) -lt 1
@@ -53,17 +53,6 @@ setenv LESS_TERMCAP_so \e'[38;5;246m'    # begin standout-mode - info box
 setenv LESS_TERMCAP_ue \e'[0m'           # end underline
 setenv LESS_TERMCAP_us \e'[04;38;5;146m' # begin underline
 
-setenv FZF_DEFAULT_COMMAND 'fd --type file --follow'
-setenv FZF_CTRL_T_COMMAND 'fd --type file --follow'
-setenv FZF_DEFAULT_OPTS '--height 20%'
-
-abbr -a nova 'env OS_PASSWORD=(pass www/mit-openstack | head -n1) nova'
-abbr -a glance 'env OS_PASSWORD=(pass www/mit-openstack | head -n1) glance'
-setenv OS_USERNAME jfrg@csail.mit.edu
-setenv OS_TENANT_NAME usersandbox_jfrg
-setenv OS_AUTH_URL https://nimbus.csail.mit.edu:5001/v2.0
-setenv OS_IMAGE_API_VERSION 1
-setenv OS_VOLUME_API_VERSION 2
 function penv -d "Set up environment for the PDOS openstack service"
 	env OS_PASSWORD=(pass www/mit-openstack | head -n1) OS_TENANT_NAME=pdos OS_PROJECT_NAME=pdos $argv
 end
