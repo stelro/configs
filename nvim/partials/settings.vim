@@ -80,19 +80,19 @@ let g:comfortable_motion_scroll_down_key = "j"
 let g:comfortable_motion_scroll_up_key = "k"
 
 " -----------------------------------------------------------------------------
-" Save temporary/backup files not in the local directory, but in your ~/.vim
+" Save temporary/backup files not in the local directory, but in your ~/.config/nvim
 " directory, to keep them out of git repos.
 " But first mkdir backup, swap, and undo first to make this work
-call system('mkdir ~/.vim')
-call system('mkdir ~/.vim/backup')
-call system('mkdir ~/.vim/swap')
-set backupdir=~/.vim/backup//
-set directory=~/.vim/swap//
+call system('mkdir ~/.config/nvim')
+call system('mkdir ~/.config/nvim/backup')
+call system('mkdir ~/.config/nvim/swap')
+set backupdir=~/.config/nvim/backup//
+set directory=~/.config/nvim/swap//
 
 " Keep undo history across sessions by storing it in a file
 if has('persistent_undo')
-    call system('mkdir ~/.vim/undo')
-    set undodir=~/.vim/undo//
+    call system('mkdir ~/.config/nvim/undo')
+    set undodir=~/.config/nvim/undo//
     set undofile
     set undolevels=1000
     set undoreload=10000

@@ -1,9 +1,9 @@
 command! Ctagsgenerate :!ctags -R .
 command! Gtagsgenerate :!gtags
 
-"compile and run single source file without leaving vim
-autocmd filetype cpp nnoremap <f8> :w <bar> exec '!g++ -std=c++17 -Wall -Wextra -g -pthread '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
-autocmd filetype c nnoremap <f8> :w <bar> exec '!gcc  -Wall -Wextra -g -O0 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
+" Compile and run single source file without leaving neovim
+autocmd filetype cpp nnoremap <f8> :w <bar> exec '!clang++ -std=c++20 -Wall -Wextra -g -pthread -latomic '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
+autocmd filetype c nnoremap <f8> :w <bar> exec '!clang  -Wall -Wextra -g -O0 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
 autocmd filetype ruby nnoremap <F8> :w <bar> exec '!ruby '.shellescape('%')<CR>
 autocmd filetype javascript nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
 autocmd filetype lua nnoremap <F8> :w <bar> exec '!/usr/bin/lua5.3 '.shellescape('%')<CR>
@@ -13,7 +13,7 @@ autocmd filetype pl nnoremap <F8> :w <bar> exec '!perl '.shellescape('%')<CR>
 autocmd filetype python nnoremap <F8> :w <bar> exec '!python3 '.shellescape('%')<CR>
 autocmd filetype rust nnoremap <F8> :w <bar> exec '!rustc '.shellescape('%')<CR>
 
-" c++ syntax highlighting
+" C++ syntax highlighting
 let g:cpp_class_scope_highlight = 1
 let g:cpp_member_variable_highlight = 1
 let g:cpp_class_decl_highlight = 1
@@ -21,12 +21,10 @@ let g:cpp_class_decl_highlight = 1
 let g:syntastic_cpp_checkers = ['cpplint']
 let g:syntastic_c_checkers = ['cpplint']
 let g:syntastic_cpp_cpplint_exec = 'cpplint'
-" The following two lines are optional. Configure it to your liking!
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-" CLANG FORMAT
-" default settings
+" Clang format - my personal settings
 let g:clang_format#code_style = "llvm"
 let g:clang_format#style_options = {
       \ "AllowShortFunctionsOnASingleLine": "Empty",
@@ -47,6 +45,7 @@ let g:clang_format#style_options = {
       \   "BeforeElse": "false"},
       \ "ObjCBlockIndentWidth": 4,
       \ "SpacesBeforeTrailingComments": 4,
+      \ "SpaceBeforeParens": "Never",
       \ "SpacesInCStyleCastParentheses": "true",
       \ "SpacesInContainerLiterals": "true",
       \ "SpacesInParentheses": "false",
@@ -57,3 +56,30 @@ let g:clang_format#style_options = {
       \ "BinPackParameters": "false",
       \ "FixNamespaceComments": "true",
       \ "TabWidth": 4}
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+" Show CppMan 
+function! s:JbzCppMan()
+    let old_isk = &iskeyword
+    setl iskeyword+=:
+    let str = expand("<cword>")
+    let &l:iskeyword = old_isk
+    execute 'Man ' . str
+endfunction
+
+command! JbzCppMan :call s:JbzCppMan()
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    call JbzCppMan()
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
