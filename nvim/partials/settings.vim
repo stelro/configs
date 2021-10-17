@@ -2,7 +2,6 @@ let mapleader = " "
 
 set title                                                                       "change the terminal's title
 set number                                                                      "Line numbers are good
-set relativenumber                                                              "Show numbers relative to current line
 set noshowmode                                                                  "Hide showmode because of the powerline plugin
 set gdefault                                                                    "Set global flag for search and replace
 set cursorline                                                                  "Highlight current line
