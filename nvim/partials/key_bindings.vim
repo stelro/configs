@@ -103,3 +103,9 @@ nnoremap <Leader>cf :ClangFormat<CR>
 vnoremap <Leader>cf :ClangFormat<CR>
 " format line +-1
 autocmd FileType c,cpp,objc,java,javascript,rust nnoremap <Leader>cc :.-1,.+1Neoformat<CR>
+
+" disable F1
+map <F1> <Esc>
+imap <F1> <Esc>
+
+

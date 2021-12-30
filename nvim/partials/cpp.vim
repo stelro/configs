@@ -2,7 +2,7 @@ command! Ctagsgenerate :!ctags -R .
 command! Gtagsgenerate :!gtags
 
 " Compile and run single source file without leaving neovim
-autocmd filetype cpp nnoremap <f8> :w <bar> exec '!clang++ -std=c++20 -Wall -Wextra -g -pthread -latomic '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
+autocmd filetype cpp nnoremap <f8> :w <bar> exec '!clang++ -std=c++20 -Wall -Wextra -g -pthread -latomic -fsanitize=address,undefined '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
 autocmd filetype c nnoremap <f8> :w <bar> exec '!clang  -Wall -Wextra -g -O0 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
 autocmd filetype ruby nnoremap <F8> :w <bar> exec '!ruby '.shellescape('%')<CR>
 autocmd filetype javascript nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>

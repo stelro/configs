@@ -25,6 +25,7 @@ set wrapmargin=0                                                                
 set ruler                                                                       " Show row and column ruler information
 set showbreak=+++                                                               " Wrap-broken line prefix (shows +++)
 set showcmd                                                                     " Show command in bottom bar
+set incsearch                                                                   " Incremental search
 set showmode                                                                    " Show mode in status bar (insert/replace/...)
 set hlsearch                                                                    " Highlight all search results
 set virtualedit=onemore                                                         " allow to go one character behind the end of the line
@@ -157,3 +158,15 @@ augroup ClangFormatSettings
     autocmd FileType c,cpp,cc,objc,java,javascript,glsl,rust map <buffer><Leader>c <Plug>(operator-clang-format)
     autocmd FileType cpp,cc syntax clear cppSTLconstant
 augroup END
+
+" Search results centered please
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+
+" Very magic by default
+nnoremap ? ?\v
+nnoremap / /\v
+cnoremap %s/ %sm/
