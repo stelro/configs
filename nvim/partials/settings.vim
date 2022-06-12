@@ -1,3 +1,4 @@
+" Use space key as a leader
 let mapleader = " "
 
 set title                                                                       "change the terminal's title

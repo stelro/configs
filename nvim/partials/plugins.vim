@@ -38,5 +38,9 @@ Plug 'wakatime/vim-wakatime'
 Plug 'rust-lang/rust.vim'
 Plug 'vim-syntastic/syntastic'
 Plug 'arzg/vim-colors-xcode'
+" Debugging tools
+Plug 'puremourning/vimspector', {
+  \ 'do': 'python3 install_gadget.py --enable-cpp'
+  \ }
 
 call plug#end()

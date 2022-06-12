@@ -60,8 +60,9 @@ let g:clang_format#style_options = {
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-" Show CppMan 
-function! s:JbzCppMan()
+" Show cppman 
+" TODO: This is broken right. We need to fix it
+function! JbzCppMan()
     let old_isk = &iskeyword
     setl iskeyword+=:
     let str = expand("<cword>")
@@ -75,6 +76,7 @@ function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     call JbzCppMan()
   elseif (coc#rpc#ready())
+    " call JbzCppMan()
     call CocActionAsync('doHover')
   else
     execute '!' . &keywordprg . " " . expand('<cword>')
