@@ -111,20 +111,8 @@ imap <F1> <Esc>
 " Key bindings for interactive debugger
 command! -nargs=+ Vfb call vimspector#AddFunctionBreakpoint(<f-args>)
 
+" vimspector debugger key bindings
 let g:vimspector_enable_mappings = 'HUMAN'
-
-
-" nnoremap <leader>gd :call vimspector#Launch()<cr>
-" nnoremap <leader>gc :call vimspector#Continue()<cr>
-" nnoremap <leader>gs :call vimspector#Stop()<cr>
-" nnoremap <leader>gR :call vimspector#Restart()<cr>
-" nnoremap <leader>gp :call vimspector#Pause()<cr>
-" nnoremap <leader>gb :call vimspector#ToggleBreakpoint()<cr>
-" nnoremap <leader>gB :call vimspector#ToggleConditionalBreakpoint()<cr>
-" nnoremap <leader>gn :call vimspector#StepOver()<cr>
-" nnoremap <leader>gi :call vimspector#StepInto()<cr>
-" nnoremap <leader>go :call vimspector#StepOut()<cr>
-" nnoremap <leader>gr :call vimspector#RunToCursor()<cr>
 
 " for normal mode - the word under the cursor
 nmap <Leader>di <Plug>VimspectorBalloonEval

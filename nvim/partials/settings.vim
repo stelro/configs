@@ -1,4 +1,3 @@
-" Use space key as a leader
 let mapleader = " "
 
 set title                                                                       "change the terminal's title
@@ -42,7 +41,7 @@ set confirm                                                                     
 set textwidth=100                                                               " 100 is the new 80
 set hidden                                                                      " Remember undo after quitting
 set history=200                                                                 " Keep 200 lines of command history
-set mouse=v                                                                     " Use mouse in visual mode (not normal,insert,command,help mode)
+"set mouse=v                                                                     " Use mouse in visual mode (not normal,insert,command,help mode)
 set previewheight=7
 set listchars=tab:>-,trail:~,extends:>,precedes:<
 "set listchars=eol: ,tab:>-,trail:~,extends:>,precedes:<

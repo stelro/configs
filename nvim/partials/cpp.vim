@@ -2,16 +2,17 @@ command! Ctagsgenerate :!ctags -R .
 command! Gtagsgenerate :!gtags
 
 " Compile and run single source file without leaving neovim
-autocmd filetype cpp nnoremap <f8> :w <bar> exec '!clang++ -std=c++20 -Wall -Wextra -g -pthread -latomic -fsanitize=address,undefined '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
-autocmd filetype c nnoremap <f8> :w <bar> exec '!clang  -Wall -Wextra -g -O0 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
-autocmd filetype ruby nnoremap <F8> :w <bar> exec '!ruby '.shellescape('%')<CR>
-autocmd filetype javascript nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
-autocmd filetype lua nnoremap <F8> :w <bar> exec '!/usr/bin/lua5.3 '.shellescape('%')<CR>
-autocmd filetype jsx nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
+" Use F1 as a key binding (we have dissabled the F1 for Help in keybindings.vim file)
+autocmd filetype cpp nnoremap <F1> :w <bar> exec '!clang++ -std=c++20 -Wall -Wextra -g -pthread -latomic '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
+autocmd filetype c nnoremap <F1> :w <bar> exec '!clang  -Wall -Wextra -g -O0 '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<cr>
+autocmd filetype ruby nnoremap <F1> :w <bar> exec '!ruby '.shellescape('%')<CR>
+autocmd filetype javascript nnoremap <F1> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
+autocmd filetype lua nnoremap <F1> :w <bar> exec '!/usr/bin/lua5.3 '.shellescape('%')<CR>
+autocmd filetype jsx nnoremap <F1> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
 autocmd filetype javascript.jsx nnoremap <F8> :w <bar> exec '!/usr/bin/node '.shellescape('%')<CR>
-autocmd filetype pl nnoremap <F8> :w <bar> exec '!perl '.shellescape('%')<CR>
-autocmd filetype python nnoremap <F8> :w <bar> exec '!python3 '.shellescape('%')<CR>
-autocmd filetype rust nnoremap <F8> :w <bar> exec '!rustc '.shellescape('%')<CR>
+autocmd filetype pl nnoremap <F1> :w <bar> exec '!perl '.shellescape('%')<CR>
+autocmd filetype python nnoremap <F1> :w <bar> exec '!python3 '.shellescape('%')<CR>
+autocmd filetype rust nnoremap <F1> :w <bar> exec '!rustc '.shellescape('%')<CR>
 
 " C++ syntax highlighting
 let g:cpp_class_scope_highlight = 1
