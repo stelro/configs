@@ -43,7 +43,15 @@ M.general = {
         ["<leader>sd"] = {
             ":set nospell",
             "Disable spell-checker"
-        }
+        },
+		["<leader>kk"] = {
+			":SwapUp<CR>",
+			"Swap current line with the one above it"
+		},
+		["<leader>jj"] = {
+			":SwapDown<CR>",
+			"Swap current line with the one below it"
+		}
     }
 }
 

@@ -112,12 +112,6 @@ local swap_down = function()
     vim.api.nvim_win_set_cursor(0, {n + 1, 0})
 end
 
--- Register the functions globally so they can be called from key mappings
-_G.swap_up = swap_up
-_G.swap_down = swap_down
-
--- Set key mappings
-vim.api.nvim_set_keymap('n', '<Leader>kk', ':lua _G.swap_up()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>jj', ':lua _G.swap_down()<CR>', { noremap = true, silent = true })
-
-
+-- Create user commands for swapping
+vim.api.nvim_create_user_command('SwapUp', swap_up, {})
+vim.api.nvim_create_user_command('SwapDown', swap_down, {})
