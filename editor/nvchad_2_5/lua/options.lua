@@ -27,6 +27,8 @@ opt.ignorecase = true
 opt.smartcase = true
 opt.vb = true
 opt.diffopt:append('iwhite')
+opt.relativenumber = true
+opt.numberwidth = 4
 
 -- Abbreviations
 vim.cmd('iabbrev conosle console')
@@ -46,7 +48,7 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "cpp",
   callback = function()
     vim.api.nvim_buf_set_keymap(0, 'n', '<F1>',
-      ":w <bar> exec '!clang++ -std=c++20 -Wall -Wextra -g -pthread -latomic '..shellescape('%')..' -o '..shellescape('%:r')..' && ./'..shellescape('%:r')<CR>",
+      ":w <bar> exec '!clang++ -std=c++23 -Wall -Wextra -g -pthread -latomic '..shellescape('%')..' -o '..shellescape('%:r')..' && ./'..shellescape('%:r')<CR>",
       { noremap = true, silent = true })
   end,
 })
