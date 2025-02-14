@@ -163,7 +163,6 @@ vim.keymap.set('n', '<F1>', '<Esc>', { noremap = true, silent = true })
 vim.keymap.set('i', '<F1>', '<Esc>', { noremap = true, silent = true })
 -- nvimtree
 vim.keymap.set("n", "<C-n>", "<cmd>NvimTreeToggle<CR>")
-vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeFocus<CR>")
 -- Comment
 vim.keymap.set("n", "<leader>/", "gcc")
 vim.keymap.set("v", "<leader>/", "gc")
@@ -540,6 +539,21 @@ require("lazy").setup({
 					-- Accept currently selected item.
 					-- Set `select` to `false` to only confirm explicitly selected items.
 					['<CR>'] = cmp.mapping.confirm({ select = true }),
+					['<Tab>'] = cmp.mapping(function(fallback)
+					  if cmp.visible() then
+						cmp.select_next_item()
+					  else
+						fallback()
+					  end
+					end, { "i", "s" }),
+					-- Add Shift-Tab mapping to select the previous item.
+					['<S-Tab>'] = cmp.mapping(function(fallback)
+					  if cmp.visible() then
+						cmp.select_prev_item()
+					  else
+						fallback()
+					  end
+					end, { "i", "s" }),
 				}),
 				sources = cmp.config.sources({
 					{ name = 'nvim_lsp' },
