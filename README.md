@@ -27,7 +27,10 @@ Below is a complete list of key mappings that I use in my nvim configuration fil
 - **`<leader>gg`**
   *Executes `:GGFiles` to search for files in your project directory.*
 
-- **`<leader>b`**
+- **`<leader>bb`**
+  *Executes `:Buffers` to list and switch between open buffers.*
+
+- **`<leader>a`**
   *Executes `:Buffers` to list and switch between open buffers.*
 
 - **`<leader>w`**
@@ -145,7 +148,7 @@ Below is a complete list of key mappings that I use in my nvim configuration fil
 - **`<leader>r`**
   *Renames the symbol under the cursor.*
 
-- **`<leader>a` (Normal & Visual modes)**
+- **`<leader>A` (Normal & Visual modes)**
   *Opens the code actions menu for refactoring or quick fixes.*
 
 - **`gr`**
