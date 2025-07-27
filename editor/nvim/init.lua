@@ -132,7 +132,8 @@ vim.keymap.set('', '<leader>p', '<cmd>Files<cr>')
 -- search in project directory
 vim.keymap.set('', '<leader>gg', '<cmd>GGFiles<cr>')
 -- search buffers
-vim.keymap.set('n', '<leader>b', '<cmd>Buffers<cr>')
+vim.keymap.set('n', '<leader>bb', '<cmd>Buffers<cr>')
+vim.keymap.set('n', '<leader>a', '<cmd>Buffers<cr>')
 -- quick-save
 vim.keymap.set('n', '<leader>w', '<cmd>w<cr>')
 -- make missing : less annoying
@@ -166,6 +167,8 @@ vim.keymap.set("n", "<C-n>", "<cmd>NvimTreeToggle<CR>")
 -- Comment
 vim.keymap.set("n", "<leader>/", "gcc")
 vim.keymap.set("v", "<leader>/", "gc")
+-- Regex Search in a project (best command)
+vim.keymap.set('n', "<leader>f", "<cmd>Rg!<CR>")
 
 -------------------------------------------------------------------------------
 --
@@ -342,11 +345,15 @@ require("lazy").setup({
 			require('nvim-rooter').setup()
 		end
 	},
+	{
+		"junegunn/fzf",
+		 build = "./install --all",
+	},
 	-- fzf support for ^p
 	{
 		'junegunn/fzf.vim',
 		dependencies = {
-			{ 'junegunn/fzf', dir = '~/.fzf', build = './install --all' },
+			{ 'junegunn/fzf', build = './install --all' },
 		},
 		config = function()
 			-- stop putting a giant window over my editor
