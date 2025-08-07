@@ -2,6 +2,35 @@
 
 My configuration files for work and personal use.
 
+## Dependencies
+
+### Required Dependencies
+- **fd** - Fast file finder (used by fzf for file searching)
+- **fzf** - Fuzzy finder for files and buffers
+- **ripgrep (rg)** - Fast text search tool
+- **lldb** - Debugger for C/C++ (includes lldb-dap)
+
+### Optional Dependencies
+- **proximity-sort** - Sorts files by proximity to current file (enhances fzf)
+- **bash-language-server** - LSP for shell scripts
+- **ruff-lsp** - Python linter and formatter
+- **clangd** - C/C++ language server
+- **rust-analyzer** - Rust language server
+
+### Installation Commands
+
+#### Arch Linux
+```bash
+# Required dependencies
+sudo pacman -S fd fzf ripgrep lldb
+
+# Optional dependencies
+sudo pacman -S clang # for clangd
+yay -S proximity-sort # from AUR
+npm install -g bash-language-server
+pip install ruff-lsp
+rustup component add rust-analyzer
+```
 
 ## Neovim Keyboard Shortcuts
 
