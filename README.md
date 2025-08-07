@@ -1,170 +1,65 @@
-My configuration files for work and personal use
+# Configuration Files
 
-- Neovim
-- Kitty terminal for Linux and Mac (deprecated)
-- Alacritty
-- tmux for terminal multiplexer
-- zsh (zshell) for work
-- fish shell for personal use and Mac
-
-# Neovim Key Bindings
-
-Below is a complete list of key mappings that I use in my nvim configuration file.
-
----
-
-## General & File/Buffer Navigation
-
-- **`<Space>`**
-  *Disables the space key’s default action to free it up as the leader key.*
-
-- **Leader key (`<Space>`)**
-  *Sets the leader key as space, used for all `<leader>` mappings.*
-
-- **`<leader>p`**
-  *Executes `:Files` to quickly open the file search dialog.*
-
-- **`<leader>gg`**
-  *Executes `:GGFiles` to search for files in your project directory.*
-
-- **`<leader>bb`**
-  *Executes `:Buffers` to list and switch between open buffers.*
-
-- **`<leader>a`**
-  *Executes `:Buffers` to list and switch between open buffers.*
-
-- **`<leader>w`**
-  *Executes `:w` to save the current file.*
-
-- **`;`**
-  *Maps `;` to `:`, making it easier to enter command-line mode.*
-
-- **`<leader>bd`**
-  *Executes `:bd` to close (delete) the current buffer.*
-
-- **`gt`**
-  *Executes `:bnext` to switch to the next buffer.*
-
-- **`tg`**
-  *Executes `:bprev` to switch to the previous buffer.*
-
-- **`<leader>el`**
-  *Sends `<C-w>w` to cycle between split windows.*
-
----
-
-## Window Management & Editing
-
-- **`<leader>w/`**
-  *Executes `:vsplit` to split the window vertically.*
-
-- **`<leader>wd`**
-  *Executes `:hide` to close (or hide) the current window pane.*
-
-- **`<leader>dd`**
-  *Duplicates the current line.*
-
-- **`<leader>kk`**
-  *Swaps the current line with the line above.*
-
-- **`<leader>jj`**
-  *Swaps the current line with the line below.*
-
----
-
-## Spell Checking
-
-- **`<leader>sc`**
-  *Enables spell-checking with US English (`:set spell spelllang=en_us`).*
-
-- **`<leader>sd`**
-  *Disables spell-checking (`:set nospell`).*
-
----
-
-## Function Keys & File Explorer
-
-- **`<F1>` (Normal & Insert modes)**
-  *Mapped to `<Esc>`, effectively disabling F1’s default behavior.*
-
-- **`<C-n>` (Normal mode)** 
-  *Toggles the file explorer with `:NvimTreeToggle`.*
-
----
-
-## Commenting
-
-- **`<leader>/` (Normal mode)** 
-  *Toggle a comment on the current line.*
-
-- **`<leader>/` (Visual mode)** 
-  *Toggle comments on the selected lines.*
+My configuration files for work and personal use.
 
 
----
+## Neovim Keyboard Shortcuts
 
-## LSP & Diagnostics
+| Key Binding | Mode | Description |
+|-------------|------|-------------|
+| **File & Buffer Management** |
+| `<leader>p` | Normal | Open file search dialog |
+| `<leader>gg` | Normal | Search for files in project directory |
+| `<leader>bb` | Normal | List and switch between buffers |
+| `<leader>a` | Normal | List and switch between buffers |
+| `<leader>w` | Normal | Save current file |
+| `<leader>bd` | Normal | Close (delete) current buffer |
+| `gt` | Normal | Switch to next buffer |
+| `tg` | Normal | Switch to previous buffer |
+| `;` | Normal | Enter command mode (`:`) |
+| **Window Management** |
+| `<leader>w/` | Normal | Split window vertically |
+| `<leader>wd` | Normal | Close/hide current window pane |
+| `<leader>el` | Normal | Cycle between split windows |
+| `<leader>wl` | Normal | Switch to next window (NvChad) |
+| `<C-n>` | Normal | Toggle file explorer |
+| **Text Editing** |
+| `<leader>dd` | Normal | Duplicate current line |
+| `<leader>kk` | Normal | Swap line with line above |
+| `<leader>jj` | Normal | Swap line with line below |
+| `<leader>/` | Normal | Toggle comment on current line |
+| `<leader>/` | Visual | Toggle comments on selected lines |
+| **Search & Navigation** |
+| `<leader>f` | Normal | Search in project (Rg) / Format buffer (LSP) |
+| **LSP & Diagnostics** |
+| `<leader>e` | Normal | Open floating diagnostic window |
+| `[d` | Normal | Go to previous diagnostic |
+| `]d` | Normal | Go to next diagnostic |
+| `<leader>q` | Normal | Set location list with diagnostics |
+| `gD` | Normal | Go to declaration |
+| `gd` | Normal | Go to definition |
+| `K` | Normal | Show hover information |
+| `gi` | Normal | Go to implementation |
+| `<C-k>` | Normal | Show signature help |
+| `<leader>r` | Normal | Rename symbol |
+| `<leader>t` | Normal/Visual | Code actions (LSP) |
+| `gr` | Normal | Show references |
+| `<leader>wa` | Normal | Add workspace folder |
+| `<leader>wr` | Normal | Remove workspace folder |
+| **Spell Checking** |
+| `<leader>sc` | Normal | Enable spell check (US English) |
+| `<leader>sd` | Normal | Disable spell check |
+| **Development** |
+| `<leader>of` | Normal | Switch between source/header files |
+| `<leader>db` | Normal | Toggle debugger breakpoint |
+| `<leader>dr` | Normal | Start/continue debugger |
+| `<leader>rcu` | Normal | Upgrade all Rust crates |
+| **Completion** |
+| `<Tab>` | Insert | Select next completion item |
+| `<S-Tab>` | Insert | Select previous completion item |
+| `<CR>` | Insert | Confirm completion selection |
+| **Special Keys** |
+| `<F1>` | Normal/Insert | Disabled (mapped to Esc) |
+| `jk` | Insert | Exit insert mode (NvChad) |
 
-- **`<leader>e` (Normal mode)** 
-  *Opens a floating diagnostic window using `vim.diagnostic.open_float`.*
-
-- **`[d`**
-  *Jumps to the previous diagnostic message.*
-
-- **`]d`**
-  *Jumps to the next diagnostic message.*
-
-- **`<leader>q`**
-  *Sets the location list with current diagnostics (`vim.diagnostic.setloclist`).*
-
----
-
-## LSP Buffer-Local Mappings
-
-- **`gD`**
-  *Jumps to the declaration of the symbol under the cursor.*
-
-- **`gd`**
-  *Jumps to the definition of the symbol under the cursor.*
-
-- **`K`**
-  *Displays hover information for the symbol under the cursor.*
-
-- **`gi`**
-  *Jumps to the implementation of the symbol.*
-
-- **`<C-k>`**
-  *Displays signature help (function parameters, etc.).*
-
-- **`<leader>wa`**
-  *Adds a workspace folder via LSP.*
-
-- **`<leader>wr`**
-  *Removes a workspace folder via LSP.*
-
-- **`<leader>wl`**
-  *Lists the current workspace folders (printed to the command line).*
-
-- **`<leader>r`**
-  *Renames the symbol under the cursor.*
-
-- **`<leader>A` (Normal & Visual modes)**
-  *Opens the code actions menu for refactoring or quick fixes.*
-
-- **`gr`**
-  *Lists all references to the symbol under the cursor.*
-
-- **`<leader>f`**
-  *Formats the current buffer asynchronously using LSP.*
-
----
-
-## Completion Menu (nvim-cmp) Mappings
-
-- **`<Tab>` (Insert & Select modes)**
-  *When the completion menu is visible, selects the next item; otherwise, it performs its default action.*
-
-- **`<S-Tab>` (Insert & Select modes)** 
-  *When the completion menu is visible, selects the previous item; otherwise, it performs its default action.*
-
----
+**Leader key**: `<Space>` (Space bar)
