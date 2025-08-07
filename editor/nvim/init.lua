@@ -77,7 +77,7 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "cpp",
   callback = function()
     vim.api.nvim_buf_set_keymap(0, 'n', '<F1>',
-      ":w <bar> exec '!clang++ -std=c++23 -Wall -Wextra -g -pthread -latomic '..shellescape('%')..' -o '..shellescape('%:r')..' && ./'..shellescape('%:r')<CR>",
+      ":w <bar> exec '!clang++ -std=c++23 -Wall -Wextra -g -O0 -pthread -latomic '..shellescape('%')..' -o '..shellescape('%:r')..' && ./'..shellescape('%:r')<CR>",
       { noremap = true, silent = true })
   end,
 })
@@ -376,7 +376,11 @@ require("lazy").setup({
 	{
 		'ggandor/leap.nvim',
 		config = function()
-			require('leap').create_default_mappings()
+			local leap = require('leap')
+			-- Use custom mappings to avoid conflicts
+			vim.keymap.set({'n', 'x', 'o'}, 's', '<Plug>(leap-forward)')
+			vim.keymap.set({'n', 'x', 'o'}, 'gs', '<Plug>(leap-backward)')
+			vim.keymap.set({'n', 'x', 'o'}, 'gS', '<Plug>(leap-from-window)')
 		end
 	},
 	-- better %
@@ -743,5 +747,100 @@ require("lazy").setup({
 		  auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
 		}
 	  end,
+	},
+	-- Debugging support
+	{
+		"mfussenegger/nvim-dap",
+		dependencies = {
+			"rcarriga/nvim-dap-ui",
+			"nvim-neotest/nvim-nio",
+		},
+		config = function()
+			local dap = require("dap")
+			local dapui = require("dapui")
+
+			-- Setup dap-ui
+			dapui.setup({
+				layouts = {
+					{
+						elements = {
+							{ id = "scopes", size = 0.25 },
+							{ id = "breakpoints", size = 0.25 },
+							{ id = "stacks", size = 0.25 },
+							{ id = "watches", size = 0.25 },
+						},
+						size = 40,
+						position = "left",
+					},
+					{
+						elements = {
+							{ id = "repl", size = 0.5 },
+							{ id = "console", size = 0.5 },
+						},
+						size = 10,
+						position = "bottom",
+					},
+				},
+			})
+
+			-- C++ configuration using lldb-dap
+			dap.adapters.lldb = {
+				type = 'executable',
+				command = 'lldb-dap',
+				name = 'lldb'
+			}
+
+			dap.configurations.cpp = {
+				{
+					name = "Launch",
+					type = "lldb",
+					request = "launch",
+					program = function()
+						return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+					end,
+					cwd = '${workspaceFolder}',
+					stopOnEntry = false,
+					args = {},
+					runInTerminal = false,
+				},
+				{
+					name = "Debug current file",
+					type = "lldb",
+					request = "launch",
+					program = function()
+						local file = vim.fn.expand('%:r')
+						return vim.fn.getcwd() .. '/' .. file
+					end,
+					cwd = '${workspaceFolder}',
+					stopOnEntry = false,
+					args = {},
+					runInTerminal = false,
+				},
+			}
+
+			-- Use the same config for C
+			dap.configurations.c = dap.configurations.cpp
+
+			-- Auto-open/close dapui
+			dap.listeners.after.event_initialized["dapui_config"] = function()
+				dapui.open()
+			end
+			dap.listeners.before.event_terminated["dapui_config"] = function()
+				dapui.close()
+			end
+			dap.listeners.before.event_exited["dapui_config"] = function()
+				dapui.close()
+			end
+
+			-- Debugging keybindings
+			vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
+			vim.keymap.set('n', '<leader>dc', dap.continue, { desc = "Continue debugging" })
+			vim.keymap.set('n', '<leader>ds', dap.step_over, { desc = "Step over" })
+			vim.keymap.set('n', '<leader>di', dap.step_into, { desc = "Step into" })
+			vim.keymap.set('n', '<leader>do', dap.step_out, { desc = "Step out" })
+			vim.keymap.set('n', '<leader>dr', dap.repl.open, { desc = "Open REPL" })
+			vim.keymap.set('n', '<leader>dt', dap.terminate, { desc = "Terminate debugging" })
+			vim.keymap.set('n', '<leader>du', dapui.toggle, { desc = "Toggle debug UI" })
+		end,
 	},
 })

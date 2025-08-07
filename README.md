@@ -31,6 +31,9 @@ My configuration files for work and personal use.
 | `<leader>/` | Visual | Toggle comments on selected lines |
 | **Search & Navigation** |
 | `<leader>f` | Normal | Search in project (Rg) / Format buffer (LSP) |
+| `s` | Normal/Visual/Operator | Leap forward to any location |
+| `gs` | Normal/Visual/Operator | Leap backward to any location |
+| `gS` | Normal/Visual/Operator | Leap to any location in any window |
 | **LSP & Diagnostics** |
 | `<leader>e` | Normal | Open floating diagnostic window |
 | `[d` | Normal | Go to previous diagnostic |
@@ -52,7 +55,13 @@ My configuration files for work and personal use.
 | **Development** |
 | `<leader>of` | Normal | Switch between source/header files |
 | `<leader>db` | Normal | Toggle debugger breakpoint |
-| `<leader>dr` | Normal | Start/continue debugger |
+| `<leader>dc` | Normal | Continue debugging |
+| `<leader>ds` | Normal | Step over (debugger) |
+| `<leader>di` | Normal | Step into (debugger) |
+| `<leader>do` | Normal | Step out (debugger) |
+| `<leader>dr` | Normal | Open debug REPL |
+| `<leader>dt` | Normal | Terminate debugging |
+| `<leader>du` | Normal | Toggle debug UI |
 | `<leader>rcu` | Normal | Upgrade all Rust crates |
 | **Completion** |
 | `<Tab>` | Insert | Select next completion item |
