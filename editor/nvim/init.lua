@@ -8,6 +8,7 @@ vim.g.mapleader = " "
 --
 -------------------------------------------------------------------------------
 -- never ever folding
+vim.opt.termguicolors = true
 vim.opt.foldenable = false
 vim.opt.foldmethod = 'manual'
 vim.opt.foldlevelstart = 99
@@ -268,19 +269,67 @@ require("lazy").setup({
 		config = function()
 			vim.cmd([[colorscheme gruvbox-dark-hard]])
 			vim.o.background = 'dark'
-			-- XXX: hi Normal ctermbg=NONE
 			-- Make comments more prominent -- they are important.
 			local bools = vim.api.nvim_get_hl(0, { name = 'Boolean' })
 			vim.api.nvim_set_hl(0, 'Comment', bools)
 			-- Make it clearly visible which argument we're at.
 			local marked = vim.api.nvim_get_hl(0, { name = 'PMenu' })
 			vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter', { fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true })
-			-- XXX
-			-- Would be nice to customize the highlighting of warnings and the like to make
-			-- them less glaring. But alas
-			-- https://github.com/nvim-lua/lsp_extensions.nvim/issues/21
-			-- call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
+			-- LSP: C++
+			-- Class & struct names (red instead of yellow)
+			vim.api.nvim_set_hl(0, '@type.cpp', { fg = '#fabd2f' })
+			vim.api.nvim_set_hl(0, '@lsp.type.class.cpp', { fg = '#fabd2f' })
+			vim.api.nvim_set_hl(0, '@lsp.type.struct.cpp', { fg = '#fabd2f' })
+			vim.api.nvim_set_hl(0, '@type', { fg = '#fb4934' })  -- fallback if needed
+
+			-- Types and 'auto' keyword (purple)
+			vim.api.nvim_set_hl(0, '@type.builtin.cpp', { fg = '#d3869b' })
+			vim.api.nvim_set_hl(0, '@lsp.type.builtinType.cpp', { fg = '#d3869b' })
+			vim.api.nvim_set_hl(0, '@lsp.type.type.cpp', { fg = '#d3869b' })
+			vim.api.nvim_set_hl(0, '@lsp.type.type', { fg = '#d3869b' })
+
+			-- Variable names (light gray for all variables)
+			vim.api.nvim_set_hl(0, '@variable', { fg = '#d5c4a1' })
+			vim.api.nvim_set_hl(0, '@lsp.type.variable.cpp', { fg = '#d5c4a1' })
+			vim.api.nvim_set_hl(0, '@lsp.type.variable', { fg = '#d5c4a1' })
+
+			-- Function parameter names (light gray)
+			vim.api.nvim_set_hl(0, '@parameter', { fg = '#d5c4a1' })
+			vim.api.nvim_set_hl(0, '@lsp.type.parameter.cpp', { fg = '#d5c4a1' })
+			vim.api.nvim_set_hl(0, '@lsp.type.parameter', { fg = '#d5c4a1' })
+
+			-- 'delete' and 'new' keywords (green)
+			vim.api.nvim_set_hl(0, '@keyword.operator.cpp', { fg = '#83a598' })
+			vim.api.nvim_set_hl(0, '@lsp.type.keyword', { fg = '#83a598' })
+			vim.api.nvim_set_hl(0, '@keyword.modifier.cpp', { fg = '#83a598' })
+			vim.api.nvim_set_hl(0, '@variable.member', { fg = '#d5c4a1' })
+
+			vim.api.nvim_set_hl(0, "@variable.parameter", { fg = "#d5c4a1" })
+			vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.readonly.cpp", { fg = "#d5c4a1" })
+			vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.readonly", { fg = "#d5c4a1" })
+			vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.mutable.cpp", { fg = "#d5c4a1" })
+			vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.mutable", { fg = "#d5c4a1" })
+
+			vim.api.nvim_set_hl(0, '@keyword.import', { fg = "#d3869b", ctermfg = cterm0E, italic = false })
+			vim.api.nvim_set_hl(0, 'DiagnosticUnnecessary', {  underline = true })
+			vim.api.nvim_set_hl(0, '@constant.builtin', { fg = "#d3869b", italic = false })
 		end
+	},
+	{
+		  "nvim-treesitter/nvim-treesitter",
+		  branch = "master", -- will switch to main in the future
+		  lazy = false,      -- load at startup as recommended
+		  build = ":TSUpdate", -- always keep parsers up to date
+		 config = function()
+			require("nvim-treesitter.configs").setup {
+			  ensure_installed = { "cpp", "c", "vim", "lua", "query", "vimdoc", "markdown", "markdown_inline" }, -- add more as needed
+			  auto_install = true,
+			  highlight = {
+				enable = true,
+				additional_vim_regex_highlighting = false,
+			  },
+			}
+		 end,
 	},
     -- nice bar at the bottom
 	{
@@ -368,9 +417,9 @@ require("lazy").setup({
 				if base == '.' then
 					-- if there is no current file,
 					-- proximity-sort can't do its thing
-					return 'fdfind --hidden --type file --follow'
+					return 'fd --hidden --type file --follow'
 				else
-					return vim.fn.printf('fdfind --hidden --type file --follow | proximity-sort %s', vim.fn.shellescape(vim.fn.expand('%')))
+					return vim.fn.printf('fd --hidden --type file --follow | proximity-sort %s', vim.fn.shellescape(vim.fn.expand('%')))
 				end
 			end
 			vim.api.nvim_create_user_command('Files', function(arg)
@@ -418,10 +467,12 @@ require("lazy").setup({
                     "clangd",
                     "--background-index",
                     "--clang-tidy",
+                    "--query-driver=/usr/bin/clang++",
+                    "--query-driver=/usr/bin/clang",
                     "--query-driver=/usr/bin/gcc",
                     "--query-driver=/usr/bin/g++",
                 },
-                filetypes = {"c", "cpp"},
+                filetypes = {"c", "cpp", "h", "hpp"},
                 root_dir = require('lspconfig').util.root_pattern("compiler_commands.json", ".git"),
             }
 
@@ -495,7 +546,7 @@ require("lazy").setup({
 					end, opts)
 					--vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
 					vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, opts)
-					vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, opts)
+					vim.keymap.set({ 'n', 'v' }, '<leader>t', vim.lsp.buf.code_action, opts)
 					vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
 					vim.keymap.set('n', '<leader>f', function()
 						vim.lsp.buf.format { async = true }
