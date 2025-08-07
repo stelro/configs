@@ -6,26 +6,6 @@ setenv FZF_DEFAULT_COMMAND "git ls-files --cached --others --exclude-standard ||
 setenv FZF_CTRL_T_COMMAND "fd --type file --follow"
 setenv FZF_DEFAULT_OPTS "--height 20%"
 
-function remarkable
-	if test (count $argv) -lt 1
-		echo "No files given"
-		return
-	end
-
-	ip addr show up to 10.11.99.0/29 | grep enp2s0f0u3 >/dev/null
-	if test $status -ne 0
-		# not yet connected
-		echo "Connecting to reMarkable internal network"
-		sudo dhcpcd enp2s0f0u3
-	end
-	for f in $argv
-		echo "-> uploading $f"
-		curl --form "file=@\""$f"\"" http://10.11.99.1/upload
-		echo
-	end
-	sudo dhcpcd -k enp2s0f0u3
-end
-
 # Type - to move up to top parent dir which is a repository
 function d
 	while test $PWD != "/"
@@ -34,6 +14,23 @@ function d
 		end
 		cd ..
 	end
+end
+
+# Show todos from ~/todos.txt file
+function showtodos -d "Display todos from ~/todos.txt"
+	echo -e " \\e[1mTODOs\\e[0;32m"
+	echo
+	if test -s ~/todos.txt
+		set_color yellow
+		cat ~/todos.txt | sed 's/^/  /'
+		echo
+	else
+		set_color cyan
+		echo "  No todos found in ~/todos.txt"
+		echo "  Create ~/todos.txt to add your todos!"
+		echo
+	end
+	set_color normal
 end
 
 # Fish git prompt
@@ -52,22 +49,6 @@ setenv LESS_TERMCAP_se \e'[0m'           # end standout-mode
 setenv LESS_TERMCAP_so \e'[38;5;246m'    # begin standout-mode - info box
 setenv LESS_TERMCAP_ue \e'[0m'           # end underline
 setenv LESS_TERMCAP_us \e'[04;38;5;146m' # begin underline
-
-function penv -d "Set up environment for the PDOS openstack service"
-	env OS_PASSWORD=(pass www/mit-openstack | head -n1) OS_TENANT_NAME=pdos OS_PROJECT_NAME=pdos $argv
-end
-function pvm -d "Run nova/glance commands against the PDOS openstack service"
-	switch $argv[1]
-	case 'image-*'
-		penv glance $argv
-	case 'c'
-		penv cinder $argv[2..-1]
-	case 'g'
-		penv glance $argv[2..-1]
-	case '*'
-		penv nova $argv
-	end
-end
 
 # Fish should not add things to clipboard when killing
 # See https://github.com/fish-shell/fish-shell/issues/772
@@ -106,7 +87,7 @@ function fish_greeting
 	echo -e " \\e[1mDisk usage:\\e[0m"
 	echo
 	echo -ne (\
-		df -l -h | grep -E 'dev/(nvme0n1p6)' | \
+		df -l -h | grep -E '^/dev/' | \
 		awk '{printf "\\\\t%s\\\\t%4s / %4s  %s\\\\n\n", $6, $3, $2, $5}' | \
 		sed -e 's/^\(.*\([8][5-9]\|[9][0-9]\)%.*\)$/\\\\e[0;31m\1\\\\e[0m/' -e 's/^\(.*\([7][5-9]\|[8][0-4]\)%.*\)$/\\\\e[0;33m\1\\\\e[0m/' | \
 		paste -sd ''\
@@ -155,27 +136,17 @@ function fish_greeting
 	set_color normal
 	echo -e " \e[1mTODOs\e[0;32m"
 	echo
-	if [ $r -lt 10 ]
-		# unimportant, so show rarely
-		set_color cyan
-		# echo "  [project] <description>"
-	end
-	if [ $r -lt 25 ]
-		# back-of-my-mind, so show occasionally
-		set_color green
-		# echo "  [project] <description>"
-	end
-	if [ $r -lt 50 ]
-		# upcoming, so prompt regularly
+	
+	# Read TODOs from ~/todos.txt file
+	if test -s ~/todos.txt
 		set_color yellow
-		# echo "  [project] <description>"
+		cat ~/todos.txt | sed 's/^/  /'
+		echo
+	else
+		set_color cyan
+		echo "  No todos found in ~/todos.txt"
+		echo
 	end
-
-	# urgent, so prompt always
-	set_color red
-	# echo "  [project] <description>"
-
-	echo
 
 	if test -s ~/todo
 		set_color magenta
