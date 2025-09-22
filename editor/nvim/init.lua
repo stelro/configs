@@ -269,6 +269,8 @@ require("lazy").setup({
 		config = function()
 			vim.cmd([[colorscheme gruvbox-dark-hard]])
 			vim.o.background = 'dark'
+			-- Less visible window separator
+			vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
 			-- Make comments more prominent -- they are important.
 			local bools = vim.api.nvim_get_hl(0, { name = 'Boolean' })
 			vim.api.nvim_set_hl(0, 'Comment', bools)
@@ -439,137 +441,92 @@ require("lazy").setup({
 	},
     -- LSP
 	{
-		'neovim/nvim-lspconfig',
-		config = function()
-			-- Setup language servers.
-			local lspconfig = require('lspconfig')
+	  'neovim/nvim-lspconfig',
+	  config = function()
+		local caps = vim.lsp.protocol.make_client_capabilities()
+		pcall(function()
+		  caps = require('cmp_nvim_lsp').default_capabilities(caps)
+		end)
 
-			-- Rust
-			lspconfig.rust_analyzer.setup {
-				-- Server-specific settings. See `:help lspconfig-setup`
-				settings = {
-					["rust-analyzer"] = {
-						cargo = {
-							allFeatures = true,
-						},
-						imports = {
-							group = {
-								enable = false,
-							},
-						},
-						completion = {
-							postfix = {
-								enable = false,
-							},
-						},
-					},
-				},
-			}
+		-- Rust (rust-analyzer)
+		vim.lsp.config.rust_analyzer = {
+		  capabilities = caps,
+		  settings = {
+			["rust-analyzer"] = {
+			  cargo = { features = "all" },
+			  checkOnSave = { enable = true },
+			  check = { command = "clippy" },
+			  imports = { group = { enable = false } },
+			  completion = { postfix = { enable = false } },
+			},
+		  },
+		}
 
-            lspconfig.clangd.setup {
-                cmd = {
-                    "clangd",
-                    "--background-index",
-                    "--clang-tidy",
-                    "--query-driver=/usr/bin/clang++",
-                    "--query-driver=/usr/bin/clang",
-                    "--query-driver=/usr/bin/gcc",
-                    "--query-driver=/usr/bin/g++",
-                },
-                filetypes = {"c", "cpp", "h", "hpp"},
-                root_dir = require('lspconfig').util.root_pattern("compiler_commands.json", ".git"),
-            }
+		-- C/C++ (clangd)
+		vim.lsp.config.clangd = {
+		  capabilities = caps,
+		  cmd = {
+			"clangd",
+			"--background-index",
+			"--clang-tidy",
+			"--query-driver=/usr/bin/clang++",
+			"--query-driver=/usr/bin/clang",
+			"--query-driver=/usr/bin/gcc",
+			"--query-driver=/usr/bin/g++",
+		  },
+		  filetypes = { "c", "cpp", "h", "hpp" },
+		  -- root_dir → root_markers in the new API
+		  root_markers = { "compile_commands.json", "compile_flags.txt", ".git" },
+		}
 
-			-- Bash LSP
-			local configs = require 'lspconfig.configs'
-			if not configs.bash_lsp and vim.fn.executable('bash-language-server') == 1 then
-				configs.bash_lsp = {
-					default_config = {
-						cmd = { 'bash-language-server', 'start' },
-						filetypes = { 'sh' },
-						root_dir = require('lspconfig').util.find_git_ancestor,
-						init_options = {
-							settings = {
-								args = {}
-							}
-						}
-					}
-				}
-			end
-			if configs.bash_lsp then
-				lspconfig.bash_lsp.setup {}
-			end
+		-- Bash (bashls)  — use the standard server id "bashls"
+		vim.lsp.config.bashls = {
+		  capabilities = caps,
+		  cmd = { "bash-language-server", "start" },
+		  filetypes = { "sh", "bash" },
+		}
 
-			-- Ruff for Python
-			local configs = require 'lspconfig.configs'
-			if not configs.ruff_lsp and vim.fn.executable('ruff-lsp') == 1 then
-				configs.ruff_lsp = {
-					default_config = {
-						cmd = { 'ruff-lsp' },
-						filetypes = { 'python' },
-						root_dir = require('lspconfig').util.find_git_ancestor,
-						init_options = {
-							settings = {
-								args = {}
-							}
-						}
-					}
-				}
-			end
-			if configs.ruff_lsp then
-				lspconfig.ruff_lsp.setup {}
-			end
+		-- Python Ruff (ruff language server) — recommended over defunct ruff-lsp
+		-- See official Ruff docs for 0.11+ config+enable usage.
+		vim.lsp.config('ruff', {
+		  capabilities = caps,
+		  cmd = { 'ruff', 'server' },
+		  init_options = {
+			settings = {
+			  -- put your Ruff LSP settings here if needed
+			  -- e.g. logLevel = "info",
+			},
+		  },
+		})
 
-			-- Global mappings.
-			-- See `:help vim.diagnostic.*` for documentation on any of the below functions
-			vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
-			vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-			vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-			vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
+		-- Finally, enable the servers you want:
+		vim.lsp.enable({ 'rust_analyzer', 'clangd', 'bashls', 'ruff' })
 
-			-- Use LspAttach autocommand to only map the following keys
-			-- after the language server attaches to the current buffer
-			vim.api.nvim_create_autocmd('LspAttach', {
-				group = vim.api.nvim_create_augroup('UserLspConfig', {}),
-				callback = function(ev)
-					-- Enable completion triggered by <c-x><c-o>
-					vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+		-- Your existing LspAttach autocommand is good; keep it as-is.
+		vim.api.nvim_create_autocmd('LspAttach', {
+		  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+		  callback = function(ev)
+			vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+			local opts = { buffer = ev.buf }
+			vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+			vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+			vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+			vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+			vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+			vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
+			vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
+			vim.keymap.set('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
+			vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, opts)
+			vim.keymap.set({ 'n', 'v' }, '<leader>t', vim.lsp.buf.code_action, opts)
+			vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+			vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, opts)
 
-					-- Buffer local mappings.
-					-- See `:help vim.lsp.*` for documentation on any of the below functions
-					local opts = { buffer = ev.buf }
-					vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-					vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-					vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-					vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-					vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-					vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
-					vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
-					vim.keymap.set('n', '<leader>wl', function()
-						print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-					end, opts)
-					--vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
-					vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, opts)
-					vim.keymap.set({ 'n', 'v' }, '<leader>t', vim.lsp.buf.code_action, opts)
-					vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-					vim.keymap.set('n', '<leader>f', function()
-						vim.lsp.buf.format { async = true }
-					end, opts)
-
-					local client = vim.lsp.get_client_by_id(ev.data.client_id)
-
-					-- When https://neovim.io/doc/user/lsp.html#lsp-inlay_hint stabilizes
-					-- *and* there's some way to make it only apply to the current line.
-					-- if client.server_capabilities.inlayHintProvider then
-					--     vim.lsp.inlay_hint(ev.buf, true)
-					-- end
-
-					-- None of this semantics tokens business.
-					-- https://www.reddit.com/r/neovim/comments/143efmd/is_it_possible_to_disable_treesitter_completely/
-					client.server_capabilities.semanticTokensProvider = nil
-				end,
-			})
-		end
+			local client = vim.lsp.get_client_by_id(ev.data.client_id)
+			-- If you still want to disable semantic tokens:
+			if client then client.server_capabilities.semanticTokensProvider = nil end
+		  end,
+		})
+	  end,
 	},
 	-- LSP-based code-completion
 	{
@@ -590,7 +547,7 @@ require("lazy").setup({
 				snippet = {
 					-- REQUIRED by nvim-cmp. get rid of it once we can
 					expand = function(args)
-						vim.fn["vsnip#anonymous"](args.body)
+						vim.snippet.expand(args.body)
 					end,
 				},
 				mapping = cmp.mapping.preset.insert({
@@ -600,22 +557,7 @@ require("lazy").setup({
 					['<C-e>'] = cmp.mapping.abort(),
 					-- Accept currently selected item.
 					-- Set `select` to `false` to only confirm explicitly selected items.
-					['<CR>'] = cmp.mapping.confirm({ select = true }),
-					['<Tab>'] = cmp.mapping(function(fallback)
-					  if cmp.visible() then
-						cmp.select_next_item()
-					  else
-						fallback()
-					  end
-					end, { "i", "s" }),
-					-- Add Shift-Tab mapping to select the previous item.
-					['<S-Tab>'] = cmp.mapping(function(fallback)
-					  if cmp.visible() then
-						cmp.select_prev_item()
-					  else
-						fallback()
-					  end
-					end, { "i", "s" }),
+					['<CR>'] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Insert }),
 				}),
 				sources = cmp.config.sources({
 					{ name = 'nvim_lsp' },
