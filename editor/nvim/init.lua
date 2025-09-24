@@ -77,7 +77,7 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "cpp",
   callback = function()
     vim.api.nvim_buf_set_keymap(0, 'n', '<F1>',
-      ":w <bar> exec '!clang++ -std=c++23 -Wall -Wextra -g -O0 -pthread -latomic '..shellescape('%')..' -o '..shellescape('%:r')..' && ./'..shellescape('%:r')<CR>",
+		":w <bar> exec '!clang++ -std=c++23 -Wall -Wextra -g -O0 -pthread -latomic '..shellescape('%')..' -o '..shellescape('%:r')..'.out && ./'..shellescape('%:r')..'.out'<CR>",
       { noremap = true, silent = true })
   end,
 })
@@ -170,6 +170,12 @@ vim.keymap.set("n", "<leader>/", "gcc")
 vim.keymap.set("v", "<leader>/", "gc")
 -- Regex Search in a project (best command)
 vim.keymap.set('n', "<leader>f", "<cmd>Rg!<CR>")
+
+-- LSP
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = "Show diagnostics in float" })
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic" })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Go to next diagnostic" })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Diagnostics to loclist" })
 
 -------------------------------------------------------------------------------
 --
