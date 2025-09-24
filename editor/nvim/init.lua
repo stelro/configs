@@ -77,7 +77,7 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "cpp",
   callback = function()
     vim.api.nvim_buf_set_keymap(0, 'n', '<F1>',
-		":w <bar> exec '!clang++ -std=c++23 -Wall -Wextra -g -O0 -pthread -latomic '..shellescape('%')..' -o '..shellescape('%:r')..'.out && ./'..shellescape('%:r')..'.out'<CR>",
+		":w <bar> exec '!mkdir -p build && clang++ -std=c++23 -Wall -Wextra -g -O0 -pthread -latomic '..shellescape('%')..' -o build/'..shellescape('%:t:r')..'.out && ./build/'..shellescape('%:t:r')..'.out'<CR>",
       { noremap = true, silent = true })
   end,
 })
