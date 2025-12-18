@@ -1,7 +1,7 @@
 -- always set leader first!
 vim.keymap.set("n", "<Space>", "<Nop>", { silent = true })
 vim.g.mapleader = " "
-
+vim.cmd("colorscheme tsoding")
 -------------------------------------------------------------------------------
 --
 -- preferences
@@ -77,7 +77,7 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "cpp",
   callback = function()
     vim.api.nvim_buf_set_keymap(0, 'n', '<F1>',
-		":w <bar> exec '!mkdir -p build && clang++ -std=c++23 -Wall -Wextra -g -O0 -pthread -latomic '..shellescape('%')..' -o build/'..shellescape('%:t:r')..'.out && ./build/'..shellescape('%:t:r')..'.out'<CR>",
+		":w <bar> exec '!mkdir -p build && clang++ -std=c++26 -Wall -Wextra -g -O0 -pthread  '..shellescape('%')..' -o build/'..shellescape('%:t:r')..'.out && ./build/'..shellescape('%:t:r')..'.out'<CR>",
       { noremap = true, silent = true })
   end,
 })
@@ -186,6 +186,34 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Diagnostic
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- Force clangd to see the exact flags that work for compilation
+-- vim.api.nvim_create_autocmd("BufWritePost", {
+--   pattern = "*.cpp",
+--   callback = function()
+--     local filename = vim.fn.expand('%:t')
+--     local filepath = vim.fn.expand('%:p')
+--     local dir = vim.fn.expand('%:p:h')
+--
+--     -- EXPLANATION OF FLAGS:
+--     -- 1. -nostdinc++  : Tells clang "Stop looking for C++ headers automatically" (Fixes the double-include crash)
+--     -- 2. -isystem ... : Manually adds the Homebrew headers (The one true source)
+--     -- 3. -std=c++26   : Enables the new features
+--     local cmd = "/opt/homebrew/opt/llvm/bin/clang++ -std:c++latest -stdlib=libc++ -nostdinc++ -isystem /opt/homebrew/opt/llvm/include/c++/v1 -Wall -Wextra -Wno-unknown-warning-option " .. filename
+--
+--     local json = string.format(
+--       '[{"directory": "%s", "command": "%s", "file": "%s"}]',
+--       dir, cmd, filepath
+--     )
+--
+--     local file = io.open(dir .. "/compile_commands.json", "w")
+--     if file then
+--       file:write(json)
+--       file:close()
+--       vim.cmd("LspRestart clangd") 
+--     end
+--   end,
+-- })
+
 -- highlight yanked text
 vim.api.nvim_create_autocmd(
 	'TextYankPost',
@@ -273,54 +301,54 @@ require("lazy").setup({
 		lazy = false, -- load at start
 		priority = 1000, -- load first
 		config = function()
-			vim.cmd([[colorscheme gruvbox-dark-hard]])
-			vim.o.background = 'dark'
-			-- Less visible window separator
-			vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
-			-- Make comments more prominent -- they are important.
-			local bools = vim.api.nvim_get_hl(0, { name = 'Boolean' })
-			vim.api.nvim_set_hl(0, 'Comment', bools)
-			-- Make it clearly visible which argument we're at.
-			local marked = vim.api.nvim_get_hl(0, { name = 'PMenu' })
-			vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter', { fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true })
-			-- LSP: C++
-			-- Class & struct names (red instead of yellow)
-			vim.api.nvim_set_hl(0, '@type.cpp', { fg = '#fabd2f' })
-			vim.api.nvim_set_hl(0, '@lsp.type.class.cpp', { fg = '#fabd2f' })
-			vim.api.nvim_set_hl(0, '@lsp.type.struct.cpp', { fg = '#fabd2f' })
-			vim.api.nvim_set_hl(0, '@type', { fg = '#fb4934' })  -- fallback if needed
-
-			-- Types and 'auto' keyword (purple)
-			vim.api.nvim_set_hl(0, '@type.builtin.cpp', { fg = '#d3869b' })
-			vim.api.nvim_set_hl(0, '@lsp.type.builtinType.cpp', { fg = '#d3869b' })
-			vim.api.nvim_set_hl(0, '@lsp.type.type.cpp', { fg = '#d3869b' })
-			vim.api.nvim_set_hl(0, '@lsp.type.type', { fg = '#d3869b' })
-
-			-- Variable names (light gray for all variables)
-			vim.api.nvim_set_hl(0, '@variable', { fg = '#d5c4a1' })
-			vim.api.nvim_set_hl(0, '@lsp.type.variable.cpp', { fg = '#d5c4a1' })
-			vim.api.nvim_set_hl(0, '@lsp.type.variable', { fg = '#d5c4a1' })
-
-			-- Function parameter names (light gray)
-			vim.api.nvim_set_hl(0, '@parameter', { fg = '#d5c4a1' })
-			vim.api.nvim_set_hl(0, '@lsp.type.parameter.cpp', { fg = '#d5c4a1' })
-			vim.api.nvim_set_hl(0, '@lsp.type.parameter', { fg = '#d5c4a1' })
-
-			-- 'delete' and 'new' keywords (green)
-			vim.api.nvim_set_hl(0, '@keyword.operator.cpp', { fg = '#83a598' })
-			vim.api.nvim_set_hl(0, '@lsp.type.keyword', { fg = '#83a598' })
-			vim.api.nvim_set_hl(0, '@keyword.modifier.cpp', { fg = '#83a598' })
-			vim.api.nvim_set_hl(0, '@variable.member', { fg = '#d5c4a1' })
-
-			vim.api.nvim_set_hl(0, "@variable.parameter", { fg = "#d5c4a1" })
-			vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.readonly.cpp", { fg = "#d5c4a1" })
-			vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.readonly", { fg = "#d5c4a1" })
-			vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.mutable.cpp", { fg = "#d5c4a1" })
-			vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.mutable", { fg = "#d5c4a1" })
-
-			vim.api.nvim_set_hl(0, '@keyword.import', { fg = "#d3869b", ctermfg = cterm0E, italic = false })
-			vim.api.nvim_set_hl(0, 'DiagnosticUnnecessary', {  underline = true })
-			vim.api.nvim_set_hl(0, '@constant.builtin', { fg = "#d3869b", italic = false })
+			-- vim.cmd([[colorscheme gruvbox-dark-hard]])
+			-- vim.o.background = 'dark'
+			-- -- Less visible window separator
+			-- vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
+			-- -- Make comments more prominent -- they are important.
+			-- local bools = vim.api.nvim_get_hl(0, { name = 'Boolean' })
+			-- vim.api.nvim_set_hl(0, 'Comment', bools)
+			-- -- Make it clearly visible which argument we're at.
+			-- local marked = vim.api.nvim_get_hl(0, { name = 'PMenu' })
+			-- vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter', { fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true })
+			-- -- LSP: C++
+			-- -- Class & struct names (red instead of yellow)
+			-- vim.api.nvim_set_hl(0, '@type.cpp', { fg = '#fabd2f' })
+			-- vim.api.nvim_set_hl(0, '@lsp.type.class.cpp', { fg = '#fabd2f' })
+			-- vim.api.nvim_set_hl(0, '@lsp.type.struct.cpp', { fg = '#fabd2f' })
+			-- vim.api.nvim_set_hl(0, '@type', { fg = '#fb4934' })  -- fallback if needed
+			--
+			-- -- Types and 'auto' keyword (purple)
+			-- vim.api.nvim_set_hl(0, '@type.builtin.cpp', { fg = '#d3869b' })
+			-- vim.api.nvim_set_hl(0, '@lsp.type.builtinType.cpp', { fg = '#d3869b' })
+			-- vim.api.nvim_set_hl(0, '@lsp.type.type.cpp', { fg = '#d3869b' })
+			-- vim.api.nvim_set_hl(0, '@lsp.type.type', { fg = '#d3869b' })
+			--
+			-- -- Variable names (light gray for all variables)
+			-- vim.api.nvim_set_hl(0, '@variable', { fg = '#d5c4a1' })
+			-- vim.api.nvim_set_hl(0, '@lsp.type.variable.cpp', { fg = '#d5c4a1' })
+			-- vim.api.nvim_set_hl(0, '@lsp.type.variable', { fg = '#d5c4a1' })
+			--
+			-- -- Function parameter names (light gray)
+			-- vim.api.nvim_set_hl(0, '@parameter', { fg = '#d5c4a1' })
+			-- vim.api.nvim_set_hl(0, '@lsp.type.parameter.cpp', { fg = '#d5c4a1' })
+			-- vim.api.nvim_set_hl(0, '@lsp.type.parameter', { fg = '#d5c4a1' })
+			--
+			-- -- 'delete' and 'new' keywords (green)
+			-- vim.api.nvim_set_hl(0, '@keyword.operator.cpp', { fg = '#83a598' })
+			-- vim.api.nvim_set_hl(0, '@lsp.type.keyword', { fg = '#83a598' })
+			-- vim.api.nvim_set_hl(0, '@keyword.modifier.cpp', { fg = '#83a598' })
+			-- vim.api.nvim_set_hl(0, '@variable.member', { fg = '#d5c4a1' })
+			--
+			-- vim.api.nvim_set_hl(0, "@variable.parameter", { fg = "#d5c4a1" })
+			-- vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.readonly.cpp", { fg = "#d5c4a1" })
+			-- vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.readonly", { fg = "#d5c4a1" })
+			-- vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.mutable.cpp", { fg = "#d5c4a1" })
+			-- vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.mutable", { fg = "#d5c4a1" })
+			--
+			-- vim.api.nvim_set_hl(0, '@keyword.import', { fg = "#d3869b", ctermfg = cterm0E, italic = false })
+			-- vim.api.nvim_set_hl(0, 'DiagnosticUnnecessary', {  underline = true })
+			-- vim.api.nvim_set_hl(0, '@constant.builtin', { fg = "#d3869b", italic = false })
 		end
 	},
 	{
@@ -475,10 +503,11 @@ require("lazy").setup({
 			"clangd",
 			"--background-index",
 			"--clang-tidy",
-			"--query-driver=/usr/bin/clang++",
-			"--query-driver=/usr/bin/clang",
-			"--query-driver=/usr/bin/gcc",
-			"--query-driver=/usr/bin/g++",
+			"--query-driver=/opt/homebrew/opt/llvm/bin/clang++,/usr/bin/clang++,/usr/bin/g++",
+			-- "--query-driver=/usr/bin/clang++",
+			-- "--query-driver=/usr/bin/clang",
+			-- "--query-driver=/usr/bin/gcc",
+			-- "--query-driver=/usr/bin/g++",
 		  },
 		  filetypes = { "c", "cpp", "h", "hpp" },
 		  -- root_dir → root_markers in the new API
@@ -506,7 +535,7 @@ require("lazy").setup({
 		})
 
 		-- Finally, enable the servers you want:
-		vim.lsp.enable({ 'rust_analyzer', 'clangd', 'bashls', 'ruff' })
+		vim.lsp.enable({'clangd', 'rust_analyzer'})
 
 		-- Your existing LspAttach autocommand is good; keep it as-is.
 		vim.api.nvim_create_autocmd('LspAttach', {
@@ -564,6 +593,8 @@ require("lazy").setup({
 					-- Accept currently selected item.
 					-- Set `select` to `false` to only confirm explicitly selected items.
 					['<CR>'] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Insert }),
+					['<Tab>'] = cmp.mapping.select_next_item(),
+					['<S-Tab>'] = cmp.mapping.select_prev_item(),
 				}),
 				sources = cmp.config.sources({
 					{ name = 'nvim_lsp' },
@@ -791,4 +822,8 @@ require("lazy").setup({
 			vim.keymap.set('n', '<leader>du', dapui.toggle, { desc = "Toggle debug UI" })
 		end,
 	},
+	{
+		"karb94/neoscroll.nvim",
+		 opts = {},
+  },
 })
