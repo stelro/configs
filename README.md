@@ -84,7 +84,6 @@ rustup component add rust-analyzer
 | `<leader>sc` | Normal | Enable spell check (US English) |
 | `<leader>sd` | Normal | Disable spell check |
 | **Development** |
-
 | `<leader>db` | Normal | Toggle debugger breakpoint |
 | `<leader>dc` | Normal | Continue debugging |
 | `<leader>ds` | Normal | Step over (debugger) |
@@ -93,7 +92,6 @@ rustup component add rust-analyzer
 | `<leader>dr` | Normal | Open debug REPL |
 | `<leader>dt` | Normal | Terminate debugging |
 | `<leader>du` | Normal | Toggle debug UI |
-
 | **Completion** |
 | `<Tab>` | Insert | Select next completion item |
 | `<S-Tab>` | Insert | Select previous completion item |
