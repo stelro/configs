@@ -2,6 +2,8 @@
 
 My configuration files for work and personal use.
 
+* Updated: 2026-01-31
+
 ## Dependencies
 
 ### Required Dependencies
@@ -50,7 +52,7 @@ rustup component add rust-analyzer
 | `<leader>w/` | Normal | Split window vertically |
 | `<leader>wd` | Normal | Close/hide current window pane |
 | `<leader>el` | Normal | Cycle between split windows |
-| `<leader>wl` | Normal | Switch to next window (NvChad) |
+| `<leader>wl` | Normal | List workspace folders |
 | `<C-n>` | Normal | Toggle file explorer |
 | **Text Editing** |
 | `<leader>dd` | Normal | Duplicate current line |
@@ -82,7 +84,7 @@ rustup component add rust-analyzer
 | `<leader>sc` | Normal | Enable spell check (US English) |
 | `<leader>sd` | Normal | Disable spell check |
 | **Development** |
-| `<leader>of` | Normal | Switch between source/header files |
+
 | `<leader>db` | Normal | Toggle debugger breakpoint |
 | `<leader>dc` | Normal | Continue debugging |
 | `<leader>ds` | Normal | Step over (debugger) |
@@ -91,13 +93,47 @@ rustup component add rust-analyzer
 | `<leader>dr` | Normal | Open debug REPL |
 | `<leader>dt` | Normal | Terminate debugging |
 | `<leader>du` | Normal | Toggle debug UI |
-| `<leader>rcu` | Normal | Upgrade all Rust crates |
+
 | **Completion** |
 | `<Tab>` | Insert | Select next completion item |
 | `<S-Tab>` | Insert | Select previous completion item |
 | `<CR>` | Insert | Confirm completion selection |
 | **Special Keys** |
-| `<F1>` | Normal/Insert | Disabled (mapped to Esc) |
-| `jk` | Insert | Exit insert mode (NvChad) |
+| `<F1>` | Normal | Compile & Run (C/C++) / Esc (Others) |
+
+
 
 **Leader key**: `<Space>` (Space bar)
+
+## Tmux Keyboard Shortcuts
+
+| Key Binding | Description |
+|-------------|-------------|
+| **Prefix Key** | **`Ctrl+a`** (Replaces default `Ctrl+b`) |
+| **Window Management** | |
+| `Prefix + c` | Create new window |
+| `Prefix + C` | Create new window (prompt for name) |
+| `Prefix + A` | Rename current window |
+| `Prefix + n` | Next window |
+| `Prefix + p` | Previous window |
+| `Ctrl + Left` | Previous window (No prefix) |
+| `Ctrl + Right` | Next window (No prefix) |
+| `Prefix + w` | Show visible indicator of each pane |
+| `Prefix + '` | Choose window |
+| `Prefix + Q` | Kill current window (confirm) |
+| `Prefix + \|` | Split window horizontally |
+| `Prefix + -` / `Prefix + _` | Split window vertically |
+| **Pane Management** | |
+| `Ctrl + h/j/k/l` | Select pane (No prefix, vim-aware) |
+| `Ctrl + Up/Down` | Cycle through panes (No prefix) |
+| `Prefix + q` / `Prefix + C-q` | Kill current pane (confirm) |
+| `Prefix + J` | Swap pane down |
+| `Prefix + K` | Swap pane up |
+| `Prefix + H/J/K/L` | Resize pane (large steps) |
+| `Prefix + <` / `Prefix + >` | Resize pane (small steps) |
+| **Session & Client** | |
+| `Prefix + S` | Choose session |
+| `Prefix + D` | Choose client to detach |
+| `Prefix + d` / `Prefix + C-d` | Detach client |
+| `Prefix + *` | List clients |
+| `Prefix + R` | Reload config |

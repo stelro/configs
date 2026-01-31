@@ -1,7 +1,7 @@
 -- always set leader first!
 vim.keymap.set("n", "<Space>", "<Nop>", { silent = true })
 vim.g.mapleader = " "
-vim.cmd("colorscheme tsoding")
+vim.cmd("colorscheme YellowFuzz")
 -------------------------------------------------------------------------------
 --
 -- preferences
@@ -77,7 +77,7 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "cpp",
   callback = function()
     vim.api.nvim_buf_set_keymap(0, 'n', '<F1>',
-		":w <bar> exec '!mkdir -p build && clang++ -std=c++26 -Wall -Wextra -g -O0 -pthread  '..shellescape('%')..' -o build/'..shellescape('%:t:r')..'.out && ./build/'..shellescape('%:t:r')..'.out'<CR>",
+		":w <bar> exec '!mkdir -p build && clang++ -std=c++26 -fsanitize=undefined -fno-omit-frame-pointer -Wall -Wextra -g -O0 -pthread  '..shellescape('%')..' -o build/'..shellescape('%:t:r')..'.out && ./build/'..shellescape('%:t:r')..'.out'<CR>",
       { noremap = true, silent = true })
   end,
 })
@@ -186,33 +186,6 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Diagnostic
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- Force clangd to see the exact flags that work for compilation
--- vim.api.nvim_create_autocmd("BufWritePost", {
---   pattern = "*.cpp",
---   callback = function()
---     local filename = vim.fn.expand('%:t')
---     local filepath = vim.fn.expand('%:p')
---     local dir = vim.fn.expand('%:p:h')
---
---     -- EXPLANATION OF FLAGS:
---     -- 1. -nostdinc++  : Tells clang "Stop looking for C++ headers automatically" (Fixes the double-include crash)
---     -- 2. -isystem ... : Manually adds the Homebrew headers (The one true source)
---     -- 3. -std=c++26   : Enables the new features
---     local cmd = "/opt/homebrew/opt/llvm/bin/clang++ -std:c++latest -stdlib=libc++ -nostdinc++ -isystem /opt/homebrew/opt/llvm/include/c++/v1 -Wall -Wextra -Wno-unknown-warning-option " .. filename
---
---     local json = string.format(
---       '[{"directory": "%s", "command": "%s", "file": "%s"}]',
---       dir, cmd, filepath
---     )
---
---     local file = io.open(dir .. "/compile_commands.json", "w")
---     if file then
---       file:write(json)
---       file:close()
---       vim.cmd("LspRestart clangd") 
---     end
---   end,
--- })
 
 -- highlight yanked text
 vim.api.nvim_create_autocmd(
@@ -358,7 +331,7 @@ require("lazy").setup({
 		  build = ":TSUpdate", -- always keep parsers up to date
 		 config = function()
 			require("nvim-treesitter.configs").setup {
-			  ensure_installed = { "cpp", "c", "vim", "lua", "query", "vimdoc", "markdown", "markdown_inline" }, -- add more as needed
+			  ensure_installed = { "cpp", "c", "vim", "lua", "query", "vimdoc", "markdown", "markdown_inline", "rust" }, -- add more as needed
 			  auto_install = true,
 			  highlight = {
 				enable = true,
@@ -410,7 +383,7 @@ require("lazy").setup({
 	},
     -- quick navigation
 	{
-		'ggandor/leap.nvim',
+		url = "https://codeberg.org/andyg/leap.nvim",
 		config = function()
 			local leap = require('leap')
 			-- Use custom mappings to avoid conflicts
@@ -482,19 +455,7 @@ require("lazy").setup({
 		  caps = require('cmp_nvim_lsp').default_capabilities(caps)
 		end)
 
-		-- Rust (rust-analyzer)
-		vim.lsp.config.rust_analyzer = {
-		  capabilities = caps,
-		  settings = {
-			["rust-analyzer"] = {
-			  cargo = { features = "all" },
-			  checkOnSave = { enable = true },
-			  check = { command = "clippy" },
-			  imports = { group = { enable = false } },
-			  completion = { postfix = { enable = false } },
-			},
-		  },
-		}
+
 
 		-- C/C++ (clangd)
 		vim.lsp.config.clangd = {
@@ -535,7 +496,7 @@ require("lazy").setup({
 		})
 
 		-- Finally, enable the servers you want:
-		vim.lsp.enable({'clangd', 'rust_analyzer'})
+		vim.lsp.enable({'clangd'})
 
 		-- Your existing LspAttach autocommand is good; keep it as-is.
 		vim.api.nvim_create_autocmd('LspAttach', {
@@ -640,16 +601,11 @@ require("lazy").setup({
 			"nvim-treesitter/nvim-treesitter",
 		},
 	},
-	-- rust
+	-- rustaceanvim (Modern Rust support)
 	{
-		'rust-lang/rust.vim',
-		ft = { "rust" },
-		config = function()
-			vim.g.rustfmt_autosave = 1
-			vim.g.rustfmt_emit_files = 1
-			vim.g.rustfmt_fail_silently = 0
-			vim.g.rust_clip_command = 'wl-copy'
-		end
+		'mrcjkb/rustaceanvim',
+		version = '^5', -- Recommended
+		lazy = false, -- This plugin is already lazy
 	},
 	-- fish
 	'khaveesh/vim-fish-syntax',
